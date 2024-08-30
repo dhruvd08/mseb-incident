@@ -28,7 +28,7 @@ async function sendIncidentTypeSelection(phone) {
 async function sendAck(phone) {
   let msg = msgTemplate.textMsg;
   msg.to = phone;
-  msg.text.preview_url="https://mseb-incident.onrender.com";
+  msg.text.preview_url=true;
   msg.text.body =
     "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती महावितरणला समस्यांचे निराकरण करण्यात मदत करेल.\n\nअधिक तपशीलांसाठी https://mseb-incident.onrender.com/ ला भेट द्या.";
 
