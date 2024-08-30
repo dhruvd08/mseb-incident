@@ -1,5 +1,5 @@
 import pg from "pg";
-import * as waba from "./waba.js"
+import * as waba from "./waba.js";
 
 const db = new pg.Client({
   user: process.env.DB_USER,
@@ -15,5 +15,22 @@ async function sendReadReceipt(msgId) {
   await waba.sendReadReceipt(msgId);
 }
 
+async function isPhoneLinked(phone) {
+  try {
+    let result = (
+      await db.query("select id from consumers where phone=$1", [
+        req.body.consumer_phone,
+      ])
+    ).rows;
+    if (result.length != 0) {
+        return true
+    } else{
+        return false;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
-export { sendReadReceipt };
+export { sendReadReceipt, isPhoneLinked };
