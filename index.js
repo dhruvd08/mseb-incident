@@ -35,13 +35,12 @@ app.get("/notify-webhook", (req, res) => {
 });
 
 app.post("/notify-webhook", (req, res) => {
-  console.log(req.body);
+  console.log(JSON.stringify(req.body.entry[0].changes[0].value.messages));
   res.sendStatus(200);
 });
 
 app.post("/report", async (req, res) => {
   if (req.headers.authorization.split()[1] === process.env.APP_TOKEN) {
-    console.log(req.body);
     try {
       let result = (
         await db.query("select id from consumers where phone=$1", [
