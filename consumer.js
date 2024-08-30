@@ -1,7 +1,5 @@
 import pg from "pg";
-
-const FROM_PHONE_NUMBER_ID = process.env.FROM_PHONE_NUMBER_ID;
-const BEARER_TOKEN = process.env.BEARER_TOKEN;
+import * as waba from "./waba.js"
 
 const db = new pg.Client({
   user: process.env.DB_USER,
@@ -14,30 +12,8 @@ const db = new pg.Client({
 db.connect();
 
 async function sendReadReceipt(msgId) {
-  console.log(msgId);
-  const msgBody = {
-    messaging_product: "whatsapp",
-    status: "read",
-    message_id: msgId,
-  };
-  await notifyConsumer(msgBody);
+  await waba.sendReadReceipt(msgId);
 }
 
-async function notifyConsumer(msg) {
-  const endpoint = `https://graph.facebook.com/v17.0/${FROM_PHONE_NUMBER_ID}/messages`;
-  const header = {
-    Authorization: `Bearer ${BEARER_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-
-  const result = await fetch(endpoint, {
-    method: "POST",
-    headers: header,
-    body: JSON.stringify(msg),
-  });
-
-  const response = await result.json();
-  console.log(response);
-}
 
 export { sendReadReceipt };

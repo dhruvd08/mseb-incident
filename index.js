@@ -35,7 +35,6 @@ app.get("/notify-webhook", (req, res) => {
 
 app.post("/notify-webhook", async (req, res) => {
   const msg = req.body.entry[0].changes[0].value.messages[0];
-  console.log(msg.id);
   await consumer.sendReadReceipt(msg.id);
   res.sendStatus(200);
 });
