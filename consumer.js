@@ -19,7 +19,7 @@ async function isPhoneLinked(phone) {
   try {
     let result = (
       await db.query("select id from consumers where phone=$1", [
-        req.body.consumer_phone,
+        phone
       ])
     ).rows;
     if (result.length != 0) {

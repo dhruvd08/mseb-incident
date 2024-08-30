@@ -38,11 +38,11 @@ app.post("/notify-webhook", async (req, res) => {
   await consumer.sendReadReceipt(msg.id);
 
   const sender = req.body.entry[0].changes[0].value.contacts[0];
-  console.log(JSON.stringify(sender));
+  console.log(JSON.stringify(sender.wa_id));
 
   /*  If consumer exists (check by phone number), then process the message
   else notify consumer about further steps */
-  if (consumer.isPhoneLinked()){
+  if (consumer.isPhoneLinked(sender.wa_id)){
       console.log("Consumer found");
   } else {
       console.log("Notify consumer");
