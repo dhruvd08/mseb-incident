@@ -1,11 +1,10 @@
 import express from "express";
 import * as incident from "./incident.js"
+import * as consumer from "./consumer.js"
 
 const app = express();
 
 const port = process.env.port || 3000;
-const apiKey = process.env.GOOGLE_MAPS_APIKEY;
-const verifyToken = process.env.META_WH_TOKEN;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -15,7 +14,7 @@ app.use(express.json());
 app.get("/", async (req, res) => {
   try {
     const result = await incident.getRecentIncidents();
-    res.render("status.ejs", { apiKey: apiKey, result: result });
+    res.render("status.ejs", { apiKey: process.env.GOOGLE_MAPS_APIKEY, result: result });
   } catch (err) {
     res.redirect("/error");
   }
@@ -27,15 +26,16 @@ app.get("/error", (req, res) => {
 
 app.get("/notify-webhook", (req, res) => {
   console.log(req.query);
-  if (req.query["hub.mode"] == 'subscribe' &&  req.query["hub.verify_token"] == verifyToken){
+  if (req.query["hub.mode"] == 'subscribe' &&  req.query["hub.verify_token"] == process.env.META_WH_TOKEN){
     res.send(req.query["hub.challenge"]);
   } else {
     res.sendStatus(401);
   }
 });
 
-app.post("/notify-webhook", (req, res) => {
-  console.log(JSON.stringify(req.body.entry[0].changes[0].value.messages));
+app.post("/notify-webhook", async (req, res) => {
+  msg = JSON.stringify(req.body.entry[0].changes[0].value.messages[0]);
+  await consumer.sendReadReceipt(msg.id);
   res.sendStatus(200);
 });
 
