@@ -1,6 +1,6 @@
 import express from "express";
-import * as incident from "./incident.js"
-import * as consumer from "./consumer.js"
+import * as incident from "./incident.js";
+import * as consumer from "./consumer.js";
 
 const app = express();
 
@@ -10,11 +10,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 
-
 app.get("/", async (req, res) => {
   try {
     const result = await incident.getRecentIncidents();
-    res.render("status.ejs", { apiKey: process.env.GOOGLE_MAPS_APIKEY, result: result });
+    res.render("status.ejs", {
+      apiKey: process.env.GOOGLE_MAPS_APIKEY,
+      result: result,
+    });
   } catch (err) {
     res.redirect("/error");
   }
@@ -26,7 +28,10 @@ app.get("/error", (req, res) => {
 
 app.get("/notify-webhook", (req, res) => {
   console.log(req.query);
-  if (req.query["hub.mode"] == 'subscribe' &&  req.query["hub.verify_token"] == process.env.META_WH_TOKEN){
+  if (
+    req.query["hub.mode"] == "subscribe" &&
+    req.query["hub.verify_token"] == process.env.META_WH_TOKEN
+  ) {
     res.send(req.query["hub.challenge"]);
   } else {
     res.sendStatus(401);
@@ -35,20 +40,21 @@ app.get("/notify-webhook", (req, res) => {
 
 app.post("/notify-webhook", async (req, res) => {
   console.log(JSON.stringify(req.body));
-  const msg = req.body.entry[0].changes[0].value.messages[0];
-  await consumer.sendReadReceipt(msg.id);
+  if (req.body.entry[0].changes[0].value.messages) {
+    const msg = req.body.entry[0].changes[0].value.messages[0];
+    await consumer.sendReadReceipt(msg.id);
 
-  const sender = req.body.entry[0].changes[0].value.contacts[0];
+    const sender = req.body.entry[0].changes[0].value.contacts[0];
 
-  /*  If consumer exists (check by phone number), then process the message
+    /*  If consumer exists (check by phone number), then process the message
   else notify consumer about further steps */
-  if (await consumer.isPhoneLinked(sender.wa_id)){
+    if (await consumer.isPhoneLinked(sender.wa_id)) {
       console.log("Consumer found");
-  } else {
+    } else {
       console.log("Notify consumer");
       await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
+    }
   }
-
   res.sendStatus(200);
 });
 
