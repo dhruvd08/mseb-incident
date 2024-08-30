@@ -22,14 +22,14 @@ async function sendReadReceipt(msgId) {
   await notifyConsumer(msgBody);
 }
 
-async function notifyConsumer(msgBody) {
+async function notifyConsumer(msg) {
   const endpoint = `https://graph.facebook.com/v17.0/${FROM_PHONE_NUMBER_ID}/messages`;
   const header = {
     Authorization: `Bearer ${BEARER_TOKEN}`,
     "Content-Type": "application/json",
   };
 
-  const msgBody = msgBody;
+  const msgBody = msg;
 
   const result = await fetch(endpoint, {
     method: "POST",
