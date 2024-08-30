@@ -41,4 +41,4 @@ async function notifyConsumer(msg) {
   const response = await result.json();
 }
 
-export { sendReadReceipt, sendNoLinkedPhoneFoundMsg };
+export { sendReadReceipt, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection };
