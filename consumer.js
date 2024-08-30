@@ -23,11 +23,11 @@ async function isPhoneLinked(phone) {
         phone
       ])
     ).rows;
-    console.log(result);
-    if (result.length !== 0) {
-        return true
-    } else{
+    console.log(result.length);
+    if (result.length === 0) {
         return false;
+    } else {
+        return true;
     }
   } catch (err) {
     console.log(err);
