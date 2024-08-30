@@ -1,3 +1,4 @@
+import { isPhoneLinked } from "./consumer.js";
 import * as msgTemplate from "./messages.js";
 
 const FROM_PHONE_NUMBER_ID = process.env.FROM_PHONE_NUMBER_ID;
@@ -15,6 +16,13 @@ async function sendNoLinkedPhoneFoundMsg(phone) {
   msg.text.body = "कृपया तुमच्या MSEDCL शी लिंक असलेल्या मोबाईल नंबरवरून संदेश पाठवा.";
 
   await notifyConsumer(msg);
+}
+
+async function  sendIncidentTypeSelection(phone) {
+   let msg = msgTemplate.incidentSelection;
+   msg.to = phone;
+   
+   await notifyConsumer(msg);
 }
 
 async function notifyConsumer(msg) {

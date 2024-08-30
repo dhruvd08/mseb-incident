@@ -20,7 +20,6 @@ async function isPhoneLinked(phone) {
     let result = (
       await db.query("select id from consumers where phone=$1", [phone])
     ).rows;
-    console.log(result.length);
     if (result.length === 0) {
       return false;
     } else {
@@ -35,4 +34,9 @@ async function isPhoneLinked(phone) {
 async function sendNoLinkedPhoneFoundMsg(phone) {
     await waba.sendNoLinkedPhoneFoundMsg(phone);
 }
-export { sendReadReceipt, isPhoneLinked, sendNoLinkedPhoneFoundMsg };
+
+async function sendIncidentTypeSelection(phone) {
+    await waba.sendIncidentTypeSelection(phone);
+}
+
+export { sendReadReceipt, isPhoneLinked, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection };

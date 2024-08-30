@@ -39,9 +39,9 @@ app.get("/notify-webhook", (req, res) => {
 });
 
 app.post("/notify-webhook", async (req, res) => {
-  console.log(JSON.stringify(req.body));
   if (req.body.entry[0].changes[0].value.messages) {
     const msg = req.body.entry[0].changes[0].value.messages[0];
+    console.log(JSON.stringify(msg));
     await consumer.sendReadReceipt(msg.id);
 
     const sender = req.body.entry[0].changes[0].value.contacts[0];
@@ -49,9 +49,8 @@ app.post("/notify-webhook", async (req, res) => {
     /*  If consumer exists (check by phone number), then process the message
   else notify consumer about further steps */
     if (await consumer.isPhoneLinked(sender.wa_id)) {
-      console.log("Consumer found");
+      await consumer.sendIncidentTypeSelection(sender.wa_id);
     } else {
-      console.log("Notify consumer");
       await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
     }
   }
