@@ -24,8 +24,8 @@ async function getRecentIncidents() {
       }
 }
 
-async function addIncident(params) {
-    
+async function addIncident(incident_type, consumer) {
+    console.log(`${incident_type} for ${JSON.stringify(consumer)}`);
 }
 
 export { getRecentIncidents, addIncident };

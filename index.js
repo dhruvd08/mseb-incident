@@ -48,8 +48,15 @@ app.post("/notify-webhook", async (req, res) => {
 
     /*  If consumer exists (check by phone number), then process the message
   else notify consumer about further steps */
-    if (await consumer.isPhoneLinked(sender.wa_id)) {
-      await consumer.sendIncidentTypeSelection(sender.wa_id);
+    const dbConsumer = await consumer.getConsumer(sender.wa_id);
+    if (dbConsumer) {
+      if (msg.type === "text") {
+        await consumer.sendIncidentTypeSelection(sender.wa_id);
+      } else if (msg.type === "interactive") {
+        const incident_type = msg.interactive.button_reply.id;
+        console.log(`Incident type ${incident_type}`);
+        await incident.addIncident(incident_type, dbConsumer);
+      }
     } else {
       await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
     }

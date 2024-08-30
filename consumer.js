@@ -15,15 +15,15 @@ async function sendReadReceipt(msgId) {
   await waba.sendReadReceipt(msgId);
 }
 
-async function isPhoneLinked(phone) {
+async function getConsumer(phone) {
   try {
     let result = (
-      await db.query("select id from consumers where phone=$1", [phone])
+      await db.query("select id, name from consumers where phone=$1", [phone])
     ).rows;
     if (result.length === 0) {
-      return false;
+      return undefined;
     } else {
-      return true;
+      return result[0];
     }
   } catch (err) {
     console.log(err);
@@ -39,4 +39,4 @@ async function sendIncidentTypeSelection(phone) {
     await waba.sendIncidentTypeSelection(phone);
 }
 
-export { sendReadReceipt, isPhoneLinked, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection };
+export { sendReadReceipt, getConsumer, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection };
