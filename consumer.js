@@ -24,7 +24,7 @@ async function isPhoneLinked(phone) {
       ])
     ).rows;
     console.log(result);
-    if (result === undefined) {
+    if (result.length !== 0) {
         return true
     } else{
         return false;
