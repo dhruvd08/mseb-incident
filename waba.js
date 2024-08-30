@@ -10,18 +10,29 @@ async function sendReadReceipt(msgId) {
 }
 
 async function sendNoLinkedPhoneFoundMsg(phone) {
-  let msg = msgTemplate.noPhoneLinked;
+  let msg = msgTemplate.textMsg;
   msg.to = phone;
-  msg.text.body = "कृपया तुमच्या MSEDCL शी लिंक असलेल्या मोबाईल नंबरवरून संदेश पाठवा.";
+  msg.text.body =
+    "कृपया तुमच्या MSEDCL शी लिंक असलेल्या मोबाईल नंबरवरून संदेश पाठवा.";
 
   await notifyConsumer(msg);
 }
 
-async function  sendIncidentTypeSelection(phone) {
-   let msg = msgTemplate.incidentSelection;
-   msg.to = phone;
-   
-   await notifyConsumer(msg);
+async function sendIncidentTypeSelection(phone) {
+  let msg = msgTemplate.incidentSelection;
+  msg.to = phone;
+
+  await notifyConsumer(msg);
+}
+
+async function sendAck(phone) {
+  let msg = msgTemplate.textMsg;
+  msg.to = phone;
+  msg.text.preview_url="https://mseb-incident.onrender.com";
+  msg.text.body =
+    "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती महावितरणला समस्यांचे निराकरण करण्यात मदत करेल.\n\nअधिक तपशीलांसाठी https://mseb-incident.onrender.com/ ला भेट द्या.";
+
+  await notifyConsumer(msg);
 }
 
 async function notifyConsumer(msg) {
@@ -40,4 +51,9 @@ async function notifyConsumer(msg) {
   const response = await result.json();
 }
 
-export { sendReadReceipt, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection };
+export {
+  sendReadReceipt,
+  sendNoLinkedPhoneFoundMsg,
+  sendIncidentTypeSelection,
+  sendAck,
+};

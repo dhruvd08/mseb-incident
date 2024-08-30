@@ -1,11 +1,12 @@
 const imgs = ["1097290398666940"];
 
-const noPhoneLinked = {
+const textMsg = {
   messaging_product: "whatsapp",
   recipient_type: "individual",
   to: "",
   type: "text",
   text: {
+    preview_url:"",
     body: "",
   },
 };
@@ -63,4 +64,4 @@ const incidentSelection = {
     }
 }
 
-export { noPhoneLinked, readReceipt, incidentSelection };
+export { textMsg, readReceipt, incidentSelection };

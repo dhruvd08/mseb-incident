@@ -39,4 +39,8 @@ async function sendIncidentTypeSelection(phone) {
     await waba.sendIncidentTypeSelection(phone);
 }
 
-export { sendReadReceipt, getConsumer, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection };
+async function sendAck(phone) {
+    await waba.sendAck(phone);
+}
+
+export { sendReadReceipt, getConsumer, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection, sendAck };

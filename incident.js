@@ -26,6 +26,16 @@ async function getRecentIncidents() {
 
 async function addIncident(incident_type, consumer) {
     console.log(`${incident_type} for ${JSON.stringify(consumer)}`);
+    try{
+        await db.query(
+            "insert into incidents (incident_type, reported_on, consumer_id) values ($1, $2, $3)",
+            [incident_type, new Date(), consumer.id]
+          );
+
+    }catch (err){
+        console.log(err);
+        throw err;
+    }
 }
 
 export { getRecentIncidents, addIncident };
