@@ -16,12 +16,14 @@ async function sendReadReceipt(msgId) {
 }
 
 async function isPhoneLinked(phone) {
+    console.log(phone);
   try {
     let result = (
       await db.query("select id from consumers where phone=$1", [
         phone
       ])
     ).rows;
+    console.log(rows[0]);
     if (result.length != 0) {
         return true
     } else{
