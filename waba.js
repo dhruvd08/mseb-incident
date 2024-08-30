@@ -7,7 +7,7 @@ async function sendReadReceipt(msgId) {
         status: "read",
         message_id: msgId,
       };
-      await waba.notifyConsumer(msgBody);
+      await notifyConsumer(msgBody);
 }
 
 async function notifyConsumer(msg) {
