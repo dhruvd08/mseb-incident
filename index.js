@@ -25,7 +25,7 @@ app.get("/error", (req, res) => {
 });
 
 app.get("/notify-webhook", (req, res) => {
-  console.log(req.params);
+  console.log(req);
   if (req.params.hub.mode == 'subscribe' &&  req.params.hub.verify_token == VERIFY_TOKEN){
     res.send(req.params.hub.challenge);
   } else {
