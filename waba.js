@@ -1,6 +1,15 @@
 const FROM_PHONE_NUMBER_ID = process.env.FROM_PHONE_NUMBER_ID;
 const BEARER_TOKEN = process.env.BEARER_TOKEN;
 
+async function sendReadReceipt(msgId) {
+    const msgBody = {
+        messaging_product: "whatsapp",
+        status: "read",
+        message_id: msgId,
+      };
+      await waba.notifyConsumer(msgBody);
+}
+
 async function notifyConsumer(msg) {
     const endpoint = `https://graph.facebook.com/v17.0/${FROM_PHONE_NUMBER_ID}/messages`;
     const header = {
@@ -18,4 +27,4 @@ async function notifyConsumer(msg) {
     console.log(response);
   }
 
-  export {notifyConsumer}
+  export {sendReadReceipt}
