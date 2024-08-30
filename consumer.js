@@ -14,8 +14,8 @@ const db = new pg.Client({
 db.connect();
 
 async function sendReadReceipt(msgId) {
-    console.log(msgId);
- const msgBody = {
+  console.log(msgId);
+  const msgBody = {
     messaging_product: "whatsapp",
     status: "read",
     message_id: msgId,
@@ -29,7 +29,6 @@ async function notifyConsumer(msg) {
     Authorization: `Bearer ${BEARER_TOKEN}`,
     "Content-Type": "application/json",
   };
-
 
   const result = await fetch(endpoint, {
     method: "POST",
