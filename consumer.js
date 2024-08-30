@@ -29,12 +29,11 @@ async function notifyConsumer(msg) {
     "Content-Type": "application/json",
   };
 
-  const msgBody = msg;
 
   const result = await fetch(endpoint, {
     method: "POST",
     headers: header,
-    body: JSON.stringify(msgBody),
+    body: JSON.stringify(msg),
   });
 
   const response = await result.json();
