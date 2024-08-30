@@ -1,4 +1,3 @@
-import { isPhoneLinked } from "./consumer.js";
 import * as msgTemplate from "./messages.js";
 
 const FROM_PHONE_NUMBER_ID = process.env.FROM_PHONE_NUMBER_ID;
