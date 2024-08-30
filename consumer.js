@@ -14,6 +14,7 @@ const db = new pg.Client({
 db.connect();
 
 async function sendReadReceipt(msgId) {
+    console.log(msgId);
  const msgBody = {
     messaging_product: "whatsapp",
     status: "read",
