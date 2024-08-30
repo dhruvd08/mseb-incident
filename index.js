@@ -5,6 +5,7 @@ const app = express();
 
 const port = process.env.port || 3000;
 const apiKey = process.env.GOOGLE_MAPS_APIKEY;
+const verifyToken = process.env.META_WH_TOKEN;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -26,7 +27,7 @@ app.get("/error", (req, res) => {
 
 app.get("/notify-webhook", (req, res) => {
   console.log(req.query);
-  if (req.query["hub.mode"] == 'subscribe' &&  req.query["hub.verify_token"] == VERIFY_TOKEN){
+  if (req.query["hub.mode"] == 'subscribe' &&  req.query["hub.verify_token"] == verifyToken){
     res.send(req.query["hub.challenge"]);
   } else {
     res.sendStatus(401);
