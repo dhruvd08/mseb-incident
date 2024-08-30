@@ -35,7 +35,7 @@ app.get("/notify-webhook", (req, res) => {
 });
 
 app.post("/notify-webhook", (req, res) => {
-  console.log(`POST REQUEST ${req.json}`);
+  console.log(req.body);
   res.sendStatus(200);
 });
 
