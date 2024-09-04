@@ -31,7 +31,7 @@ async function updateConsumer(phone, latitude, longitude, address) {
   try {
     const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_APIKEY}`);
     const locationName = await response.json();
-    address = JSON.stringify(locationName.results[0].address_components[1].long_name);
+    address = locationName.results[0].address_components[1].long_name;
     await db.query(
       "update consumers set meter_lat = $1, meter_lng = $2, namedloc=$3 where phone=$4",
       [latitude, longitude, address, phone]
