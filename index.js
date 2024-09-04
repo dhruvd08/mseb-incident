@@ -45,14 +45,15 @@ app.post("/notify-webhook", async (req, res) => {
     await consumer.sendReadReceipt(msg.id);
 
     const sender = req.body.entry[0].changes[0].value.contacts[0];
+    console.log(JSON.stringify(sender));
 
     const dbConsumer = await consumer.getConsumer(sender.wa_id);
     if (dbConsumer) {
       let incident_type;
       if (msg.type === "text") {
-        console.log(msg.body);
-        if (["😟", "🙂", "😐"].includes(msg.text.body)) {
-          switch (msg.text.body) {
+        const content = msg.text.body;
+        if (["😟", "🙂", "😐"].includes(content)) {
+          switch (content) {
             case "😐":
               incident_type = 2;
               break;
@@ -64,7 +65,17 @@ app.post("/notify-webhook", async (req, res) => {
               break;
           }
         } else {
-          await consumer.sendIncidentTypeSelection(sender.wa_id);
+          if (msg.type === "text") {
+            const content = msg.text.body;
+            console.log(content);
+            if (isConsumerId(content)) {
+              console.log(`Got consumer number ${content}`);
+              //await consumer.addConsumer(content, sender.wa_id, );
+              await consumer.sendLocationReq(sender.wa_id);
+            } else {
+              await consumer.sendIncidentTypeSelection(sender.wa_id);
+            }
+          }
         }
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
@@ -78,6 +89,16 @@ app.post("/notify-webhook", async (req, res) => {
   }
   res.sendStatus(200);
 });
+
+function isConsumerId(inputtxt) {
+  let regexConsumerId = /^186\d{9}$/;
+
+  if (regexConsumerId.test(inputtxt)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

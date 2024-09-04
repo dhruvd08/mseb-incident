@@ -15,6 +15,15 @@ async function sendReadReceipt(msgId) {
   await waba.sendReadReceipt(msgId);
 }
 
+async function addConsumer(consumerId, phone, name) {
+  try{
+      await db.query("insert into consumers (id, phone, name) values ($1, $2, $3)", [consumerId, phone, name]);
+  } catch (err){
+    console.log(err);
+    throw err;
+  } 
+}
+
 async function getConsumer(phone) {
   try {
     let result = (
@@ -32,15 +41,27 @@ async function getConsumer(phone) {
 }
 
 async function sendNoLinkedPhoneFoundMsg(phone) {
-    await waba.sendNoLinkedPhoneFoundMsg(phone);
+  await waba.sendNoLinkedPhoneFoundMsg(phone);
 }
 
 async function sendIncidentTypeSelection(phone) {
-    await waba.sendIncidentTypeSelection(phone);
+  await waba.sendIncidentTypeSelection(phone);
+}
+
+async function sendLocationReq(phone) {
+  await waba.sendLocationReq(phone);
 }
 
 async function sendAck(phone) {
-    await waba.sendAck(phone);
+  await waba.sendAck(phone);
 }
 
-export { sendReadReceipt, getConsumer, sendNoLinkedPhoneFoundMsg, sendIncidentTypeSelection, sendAck };
+export {
+  sendReadReceipt,
+  addConsumer,
+  getConsumer,
+  sendNoLinkedPhoneFoundMsg,
+  sendIncidentTypeSelection,
+  sendLocationReq,
+  sendAck,
+};

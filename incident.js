@@ -14,13 +14,15 @@ async function getRecentIncidents() {
     try {
         let result = (
           await db.query(
-            "select t1.incident_type, t1.reported_on, consumers.id, consumers.meter_lat, consumers.meter_lng from incidents t1 join consumers on t1.consumer_id = consumers.id where reported_on = (select max(reported_on) from incidents where t1.consumer_id = incidents.consumer_id) order by reported_on desc"
+            "select t1.incident_type, t1.reported_on, consumers.id, consumers.meter_lat, consumers.meter_lng, consumers.namedLoc from incidents t1 join consumers on t1.consumer_id = consumers.id where reported_on = (select max(reported_on) from incidents where t1.consumer_id = incidents.consumer_id) order by reported_on desc"
           )
         ).rows;
 
-        console.log(result);
+        //console.log(result);
 
-        //const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${},${}&key=${process.env.GOOGLE_MAPS_APIKEY}`);
+        // const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[1].meter_lat},${result[1].meter_lng}&key=${process.env.GOOGLE_MAPS_APIKEY}`);
+        // const locationName = await response.json();
+        // console.log(JSON.stringify(locationName.results[0]));
 
         return result;
       } catch (err) {

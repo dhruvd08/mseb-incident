@@ -11,6 +11,22 @@ const textMsg = {
   },
 };
 
+const locationReq = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    type: "interactive",
+    to: "",
+    interactive: {
+      type: "location_request_message",
+      body: {
+        "text": "Where is your electricity meter located?"
+      },
+      action: {
+        "name": "send_location"
+      }
+    }
+  }
+
 const readReceipt = {
   messaging_product: "whatsapp",
   status: "read",
@@ -64,4 +80,4 @@ const incidentSelection = {
     }
 }
 
-export { textMsg, readReceipt, incidentSelection };
+export { textMsg, readReceipt, incidentSelection, locationReq };

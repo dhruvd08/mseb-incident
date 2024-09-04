@@ -9,6 +9,13 @@ async function sendReadReceipt(msgId) {
   await notifyConsumer(msg);
 }
 
+async function sendLocationReq(phone) 
+{
+  let msg = msgTemplate.locationReq;
+  msg.to = phone;
+  await notifyConsumer(msg);
+}
+
 async function sendNoLinkedPhoneFoundMsg(phone) {
   let msg = msgTemplate.textMsg;
   msg.to = phone;
@@ -55,5 +62,6 @@ export {
   sendReadReceipt,
   sendNoLinkedPhoneFoundMsg,
   sendIncidentTypeSelection,
+  sendLocationReq,
   sendAck,
 };
