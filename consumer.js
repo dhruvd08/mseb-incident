@@ -16,23 +16,30 @@ async function sendReadReceipt(msgId) {
 }
 
 async function addConsumer(consumerId, phone, name) {
-  try{
-      await db.query("insert into consumers (id, phone, name) values ($1, $2, $3)", [consumerId, phone, name]);
-  } catch (err){
-    console.log(err);
-    throw err;
-  } 
-}
-
-async function updateConsumer(phone, latitude, longitude, address) {
-  try{
-    await db.query("update consumers set meter_lat = $1, meter_lng = $2, namedloc=$3 where phone=$4",[latitude, longitude, address, phone]);
-
-  }catch(err){
+  try {
+    await db.query(
+      "insert into consumers (id, phone, name) values ($1, $2, $3)",
+      [consumerId, phone, name]
+    );
+  } catch (err) {
     console.log(err);
     throw err;
   }
-  
+}
+
+async function updateConsumer(phone, latitude, longitude, address) {
+  try {
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_APIKEY}`);
+    const locationName = await response.json();
+    address = JSON.stringify(locationName.results[0].address_components[1].long_name);
+    await db.query(
+      "update consumers set meter_lat = $1, meter_lng = $2, namedloc=$3 where phone=$4",
+      [latitude, longitude, address, phone]
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
 
 async function getConsumer(phone) {

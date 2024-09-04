@@ -12,8 +12,9 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
+    
     const result = await incident.getRecentIncidents();
-    res.render("status.ejs", {
+     res.render("status.ejs", {
       apiKey: process.env.GOOGLE_MAPS_APIKEY,
       result: result,
     });
