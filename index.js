@@ -51,8 +51,8 @@ app.post("/notify-webhook", async (req, res) => {
       let incident_type;
       if (msg.type === "text") {
         console.log(msg.body);
-        if (["😟", "🙂", "😐"].includes(msg.body)) {
-          switch (msg.body) {
+        if (["😟", "🙂", "😐"].includes(msg.text.body)) {
+          switch (msg.text.body) {
             case "😐":
               incident_type = 2;
               break;
