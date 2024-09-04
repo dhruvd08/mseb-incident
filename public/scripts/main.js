@@ -18,9 +18,9 @@ async function initMap() {
     placeMarkerAndPanTo({lat: incident.meter_lat, lng: incident.meter_lng}, map, `Reported ${incident.incident_type} on ${incident.reported_on} by ${incident.id}`);
   }
   
-  map.addListener("click", (e) => {
-    placeMarkerAndPanTo(e.latLng, map);
-  });
+  // map.addListener("click", (e) => {
+  //   placeMarkerAndPanTo(e.latLng, map);
+  // });
 }
 
 function placeMarkerAndPanTo(latLng, map, title) {
