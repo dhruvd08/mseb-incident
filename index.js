@@ -68,19 +68,25 @@ app.post("/notify-webhook", async (req, res) => {
         } else {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
         }
+        await incident.addIncident(incident_type, dbConsumer);
+        await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type}`);
+        await incident.addIncident(incident_type, dbConsumer);
+        await consumer.sendAck(sender.wa_id);
       }
-      await incident.addIncident(incident_type, dbConsumer);
-      await consumer.sendAck(sender.wa_id);
     } else {
       if (msg.type === "text") {
         const content = msg.text.body;
         console.log(content);
         if (isConsumerId(content)) {
           console.log(`Got consumer number ${content}`);
-          await consumer.addConsumer(content, sender.wa_id, sender.profile.name);
+          await consumer.addConsumer(
+            content,
+            sender.wa_id,
+            sender.profile.name
+          );
           await consumer.sendLocationReq(sender.wa_id);
         } else {
           await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
