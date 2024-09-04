@@ -48,8 +48,9 @@ app.post("/notify-webhook", async (req, res) => {
 
     const dbConsumer = await consumer.getConsumer(sender.wa_id);
     if (dbConsumer) {
+      let incident_type;
       if (msg.type === "text") {
-        let incident_type;
+        
         if (["😟", "🙂", "😐"].includes(msg.body)) {
           switch (msg.body) {
             case "😐":
