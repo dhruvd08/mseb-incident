@@ -48,6 +48,7 @@ app.post("/notify-webhook", async (req, res) => {
     console.log(JSON.stringify(sender));
 
     const dbConsumer = await consumer.getConsumer(sender.wa_id);
+    console.log(dbConsumer);
     if (dbConsumer) {
       let incident_type;
       if (msg.type === "text") {
@@ -67,27 +68,27 @@ app.post("/notify-webhook", async (req, res) => {
         } else {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
         }
+      } else if (msg.type === "interactive") {
+        incident_type = msg.interactive.button_reply.id;
+        console.log(`Incident type ${incident_type}`);
       }
-    } else if (msg.type === "interactive") {
-      incident_type = msg.interactive.button_reply.id;
-      console.log(`Incident type ${incident_type}`);
-    }
-    await incident.addIncident(incident_type, dbConsumer);
-    await consumer.sendAck(sender.wa_id);
-  } else {
-    if (msg.type === "text") {
-      const content = msg.text.body;
-      console.log(content);
-      if (isConsumerId(content)) {
-        console.log(`Got consumer number ${content}`);
-        //await consumer.addConsumer(content, sender.wa_id, sender.profile.name);
-        await consumer.sendLocationReq(sender.wa_id);
-      } else {
-        await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
+      await incident.addIncident(incident_type, dbConsumer);
+      await consumer.sendAck(sender.wa_id);
+    } else {
+      if (msg.type === "text") {
+        const content = msg.text.body;
+        console.log(content);
+        if (isConsumerId(content)) {
+          console.log(`Got consumer number ${content}`);
+          //await consumer.addConsumer(content, sender.wa_id, sender.profile.name);
+          await consumer.sendLocationReq(sender.wa_id);
+        } else {
+          await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
+        }
       }
     }
+    res.sendStatus(200);
   }
-  res.sendStatus(200);
 });
 
 function isConsumerId(inputtxt) {
