@@ -12,9 +12,8 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
-    
     const result = await incident.getRecentIncidents();
-     res.render("status.ejs", {
+    res.render("status.ejs", {
       apiKey: process.env.GOOGLE_MAPS_APIKEY,
       result: result,
     });
@@ -76,9 +75,14 @@ app.post("/notify-webhook", async (req, res) => {
         console.log(`Incident type ${incident_type}`);
         await incident.addIncident(incident_type, dbConsumer);
         await consumer.sendAck(sender.wa_id);
-      } else if (msg.type === "location"){
-        const {latitude, longitude, address, name} = msg.location;
-        await consumer.updateConsumer(sender.wa_id, latitude, longitude, `${name}`);
+      } else if (msg.type === "location") {
+        const { latitude, longitude, address, name } = msg.location;
+        await consumer.updateConsumer(
+          sender.wa_id,
+          latitude,
+          longitude,
+          `${name}`
+        );
         await consumer.sendIncidentTypeSelection(sender.wa_id);
       }
     } else {
@@ -93,9 +97,12 @@ app.post("/notify-webhook", async (req, res) => {
             sender.profile.name
           );
           await consumer.sendLocationReq(sender.wa_id);
-        } else {
+        }
+        else {
           await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
         }
+      } else {
+        await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
       }
     }
     res.sendStatus(200);
