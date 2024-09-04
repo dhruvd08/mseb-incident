@@ -77,7 +77,7 @@ app.post("/notify-webhook", async (req, res) => {
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location"){
         const {latitude, longitude, address, name} = msg.location;
-        await consumer.updateConsumer(sender.wa_id, latitude, longitude, `${name}, ${address}`);
+        await consumer.updateConsumer(sender.wa_id, latitude, longitude, `${name}`);
         await consumer.sendIncidentTypeSelection(sender.wa_id);
       }
     } else {
