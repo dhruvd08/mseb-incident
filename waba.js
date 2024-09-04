@@ -20,7 +20,7 @@ async function sendNoLinkedPhoneFoundMsg(phone) {
   let msg = msgTemplate.textMsg;
   msg.to = phone;
   msg.text.body =
-    "कृपया तुमच्या वीज कंपनी शी लिंक असलेल्या मोबाईल नंबरवरून संदेश पाठवा.";
+    "To register, send your 12 digits consumer number.";
 
   await notifyConsumer(msg);
 }
