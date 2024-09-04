@@ -24,6 +24,17 @@ async function addConsumer(consumerId, phone, name) {
   } 
 }
 
+async function updateConsumer(phone, latitude, longitude, address) {
+  try{
+    await db.query("update consumers set meter_lat = $1, meter_lng = $2, namedloc=$3 where phone=$4",[latitude, longitude, address, phone]);
+
+  }catch(err){
+    console.log(err);
+    throw err;
+  }
+  
+}
+
 async function getConsumer(phone) {
   try {
     let result = (
@@ -59,6 +70,7 @@ async function sendAck(phone) {
 export {
   sendReadReceipt,
   addConsumer,
+  updateConsumer,
   getConsumer,
   sendNoLinkedPhoneFoundMsg,
   sendIncidentTypeSelection,
