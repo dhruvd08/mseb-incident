@@ -13,7 +13,7 @@ async function sendNoLinkedPhoneFoundMsg(phone) {
   let msg = msgTemplate.textMsg;
   msg.to = phone;
   msg.text.body =
-    "कृपया तुमच्या MSEDCL शी लिंक असलेल्या मोबाईल नंबरवरून संदेश पाठवा.";
+    "कृपया तुमच्या वीज कंपनी शी लिंक असलेल्या मोबाईल नंबरवरून संदेश पाठवा.";
 
   await notifyConsumer(msg);
 }
@@ -30,7 +30,7 @@ async function sendAck(phone) {
   msg.to = phone;
   msg.text.preview_url=true;
   msg.text.body =
-    "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती महावितरणला समस्यांचे निराकरण करण्यात मदत करेल.\n\nअधिक तपशीलांसाठी https://mseb-incident.onrender.com/ ला भेट द्या.";
+    "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती तुमच्या वीज कंपनीला तुम्हाला अधिक चांगली सेवा देण्यासाठी मदत करेल..\n\nअधिक तपशीलांसाठी https://mseb-incident.onrender.com/ ला भेट द्या.";
 
   await notifyConsumer(msg);
 }

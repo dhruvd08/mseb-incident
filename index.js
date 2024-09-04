@@ -49,20 +49,34 @@ app.post("/notify-webhook", async (req, res) => {
     const dbConsumer = await consumer.getConsumer(sender.wa_id);
     if (dbConsumer) {
       if (msg.type === "text") {
-        await consumer.sendIncidentTypeSelection(sender.wa_id);
+        let incident_type;
+        if (["😟", "🙂", "😐"].includes(msg.body)) {
+          switch (msg.body) {
+            case "😐":
+              incident_type = 2;
+              break;
+            case "🙂":
+              incident_type = 1;
+              break;
+            case "😟":
+              incident_type = 0;
+              break;
+          }
+        } else {
+          await consumer.sendIncidentTypeSelection(sender.wa_id);
+        }
       } else if (msg.type === "interactive") {
-        const incident_type = msg.interactive.button_reply.id;
+        incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type}`);
-        await incident.addIncident(incident_type, dbConsumer);
-        await consumer.sendAck(sender.wa_id);
       }
+      await incident.addIncident(incident_type, dbConsumer);
+      await consumer.sendAck(sender.wa_id);
     } else {
       await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
     }
   }
   res.sendStatus(200);
 });
-
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
