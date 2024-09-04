@@ -80,7 +80,7 @@ app.post("/notify-webhook", async (req, res) => {
         console.log(content);
         if (isConsumerId(content)) {
           console.log(`Got consumer number ${content}`);
-          //await consumer.addConsumer(content, sender.wa_id, sender.profile.name);
+          await consumer.addConsumer(content, sender.wa_id, sender.profile.name);
           await consumer.sendLocationReq(sender.wa_id);
         } else {
           await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
