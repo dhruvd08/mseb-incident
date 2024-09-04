@@ -18,12 +18,7 @@ async function getRecentIncidents() {
           )
         ).rows;
 
-        //console.log(result);
-
-        // const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[1].meter_lat},${result[1].meter_lng}&key=${process.env.GOOGLE_MAPS_APIKEY}`);
-        // const locationName = await response.json();
-        // console.log(JSON.stringify(locationName.results[0]));
-
+        console.log(result);
         return result;
       } catch (err) {
         console.log(err);
