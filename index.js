@@ -64,7 +64,7 @@ app.get("/feed", async (req, res) => {
 
 app.get("/newfeed", async (req, res) => {
   sseStart(res);
-  sseNewFeed(res, false);
+  sseNewFeed(res);
   //sseRandom(res);
 });
 
@@ -81,10 +81,10 @@ let newIncident = false;
 // SSE new feed
 function sseNewFeed(res) {
   console.log(`New incident ${newIncident}`);
-  if (newIncident === true) {
-    res.write("newIncident: " + newIncident + "\n\n");
-    newIncident = false;
-  }
+  //if (newIncident === true) {
+  res.write("newIncident: " + newIncident + "\n\n");
+  newIncident = false;
+  //}
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
 }
 
