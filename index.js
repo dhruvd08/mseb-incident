@@ -80,10 +80,12 @@ function sseStart(res) {
   });
 }
 
-
+let newIncident = false;
 // SSE new feed
-function sseNewFeed(res, isNew){
-  res.write("newIncident: " + isNew + "\n\n");
+function sseNewFeed(res){
+  res.write("newIncident: " + newIncident + "\n\n");
+  newIncident = false;
+  setTimeout(() => sseNewFeed(res), Math.random() * 3000)
 
 }
 
@@ -136,13 +138,13 @@ app.post("/notify-webhook", async (req, res) => {
         }
         console.log(`Incident type ${incident_type} received via emoji`);
         await incident.addIncident(incident_type, dbConsumer);
-        sseNewFeed(res, true);
+        newIncident=true;
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
         await incident.addIncident(incident_type, dbConsumer);
-        sseNewFeed(res, true);
+        newIncident = true;
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
