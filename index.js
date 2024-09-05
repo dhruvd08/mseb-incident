@@ -10,29 +10,50 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
 app.get("/", async (req, res) => {
   try {
     const incidents = await incident.getRecentIncidents();
-    let incident_name;
     for (let incident of incidents) {
-      switch (incident.incident_type) {
-        case 0:
-          incident_name = "Power failure";
-          break;
-        case 1:
-          incident_name = "Full supply";
-          break;
-        case 2:
-          incident_name = "Dim supply";
-          break;
-      }
-      incident.desc = incident_name;
+      incident.desc = getIncidentName(incident.incident_type);
+    }
+    res.json(incidents);
+  } catch (err) {
+    console.log(err);
+    res.status(501).json({ error: "Contact API owner." });
+  }
+});
+
+function getIncidentName(incident_type) {
+  let incident_name;
+  switch (incident_type) {
+    case 0:
+      incident_name = "Power failure";
+      break;
+    case 1:
+      incident_name = "Full supply";
+      break;
+    case 2:
+      incident_name = "Dim supply";
+      break;
+  }
+  return incident_name;
+}
+
+app.get("/feed", async (req, res) => {
+  try {
+    const incidents = await incident.getRecentIncidents();
+
+    for (let incident of incidents) {
+      incident.desc = getIncidentName(incident.incident_type);
     }
     res.json(incidents);
   } catch (err) {
