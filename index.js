@@ -19,8 +19,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-
 app.get("/", async (req, res) => {
   try {
     const incidents = await incident.getRecentIncidents();
@@ -70,23 +68,23 @@ app.get("/newfeed", async (req, res) => {
   //sseRandom(res);
 });
 
-
 // SSE head
 function sseStart(res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
-    "Connection": "keep-alive"
+    Connection: "keep-alive",
   });
 }
 
 let newIncident = false;
 // SSE new feed
-function sseNewFeed(res){
-  res.write("newIncident: " + newIncident + "\n\n");
-  newIncident = false;
-  setTimeout(() => sseNewFeed(res), Math.random() * 3000)
-
+function sseNewFeed(res) {
+  if (newIncident) {
+    res.write("newIncident: " + newIncident + "\n\n");
+    newIncident = false;
+  }
+  setTimeout(() => sseNewFeed(res), Math.random() * 3000);
 }
 
 // SSE random number
@@ -135,12 +133,11 @@ app.post("/notify-webhook", async (req, res) => {
           }
           console.log(`Incident type ${incident_type} received via emoji`);
           await incident.addIncident(incident_type, dbConsumer);
-          newIncident=true;
+          newIncident = true;
           await consumer.sendAck(sender.wa_id);
         } else {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
         }
-       
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
