@@ -82,7 +82,7 @@ let newIncident = false;
 function sseNewFeed(res) {
   console.log(`New incident ${newIncident}`);
   //if (newIncident === true) {
-  res.write("newIncident: " + newIncident + "\n\n");
+  res.write("data: " + newIncident + "\n\n");
   newIncident = false;
   //}
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
