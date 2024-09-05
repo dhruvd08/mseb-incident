@@ -80,7 +80,8 @@ function sseStart(res) {
 let newIncident = false;
 // SSE new feed
 function sseNewFeed(res) {
-  if (newIncident) {
+  console.log(`New incident ${newIncident}`);
+  if (newIncident === true) {
     res.write("newIncident: " + newIncident + "\n\n");
     newIncident = false;
   }
