@@ -19,6 +19,8 @@ app.use(function (req, res, next) {
   next();
 });
 
+let newIncident = false;
+
 app.get("/", async (req, res) => {
   try {
     const incidents = await incident.getRecentIncidents();
@@ -62,6 +64,35 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+app.get("/newfeed", async (req, res) => {
+  sseStart(res);
+  sseNewFeed(res);
+  //sseRandom(res);
+});
+
+
+// SSE head
+function sseStart(res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive"
+  });
+}
+
+
+// SSE new feed
+function sseNewFeed(res){
+  res.write("newFeed: " + newIncident + "\n\n");
+  newIncident = false;
+}
+
+// SSE random number
+function sseRandom(res) {
+  res.write("data: " + (Math.floor(Math.random() * 1000) + 1) + "\n\n");
+  setTimeout(() => sseRandom(res), Math.random() * 3000);
+}
+
 app.get("/notify-webhook", (req, res) => {
   console.log(req.query);
   if (
@@ -104,11 +135,13 @@ app.post("/notify-webhook", async (req, res) => {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
         }
         await incident.addIncident(incident_type, dbConsumer);
+        newIncident = true;
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type}`);
         await incident.addIncident(incident_type, dbConsumer);
+        newIncident = true;
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
