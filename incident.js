@@ -18,8 +18,6 @@ async function getRecentIncidents() {
           )
         ).rows;
 
-        console.log(result);
-
         return result;
       } catch (err) {
         console.log(err);
