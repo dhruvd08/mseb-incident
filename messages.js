@@ -19,7 +19,7 @@ const locationReq = {
     interactive: {
       type: "location_request_message",
       body: {
-        "text": "Where is your electricity meter located?"
+        "text": "तुमच्या वीज मीटरचे स्थान पाठवा."
       },
       action: {
         "name": "send_location"
@@ -49,9 +49,9 @@ const incidentSelection = {
         "body": {
             "text": "नमस्कार! सध्या वीज पुरवठ्याची स्थिती काय आहे? उत्तर देण्यासाठी बटणे वापरा. धन्यवाद!"
         },
-        "footer": {
-            "text": "मनोरंजक वन लाइनर्स!™"
-        },
+        // "footer": {
+        //     "text": "मनोरंजक वन लाइनर्स!™"
+        // },
         "action": {
             "buttons": [
                 {
