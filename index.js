@@ -81,10 +81,10 @@ let newIncident = false;
 // SSE new feed
 function sseNewFeed(res) {
   console.log(`New incident ${newIncident}`);
-  //if (newIncident === true) {
-  res.write("data: " + newIncident + "\n\n");
-  newIncident = false;
-  //}
+  if (newIncident === true) {
+    res.write("data: " + newIncident + "\n\n");
+    newIncident = false;
+  }
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
 }
 
