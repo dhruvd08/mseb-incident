@@ -12,8 +12,23 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
-    const result = await incident.getRecentIncidents();
-    res.json(result);
+    const incidents = await incident.getRecentIncidents();
+    let incident_name;
+    for (let incident of incidents) {
+      switch (incident.incident_type) {
+        case 0:
+          incident_name = "Power failure";
+          break;
+        case 1:
+          incident_name = "Full supply";
+          break;
+        case 2:
+          incident_name = "Dim supply";
+          break;
+      }
+      incident.name = incident_name;
+    }
+    res.json(incidents);
   } catch (err) {
     console.log(err);
     res.status(501).json({ error: "Contact API owner." });
