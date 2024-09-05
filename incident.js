@@ -29,7 +29,7 @@ async function getFeed() {
   try {
     let result = (
       await db.query(
-        "select t1.id, t1.incident_type, t1.reported_on, consumers.id as consumer_id, consumers.name, consumers.meter_lat, consumers.meter_lng, consumers.namedloc from incidents t1 join consumers on t1.consumer_id = consumers.id where reported_on >= >= DATEADD(day,-3, GETDATE()) order by reported_on desc"
+        "select t1.id, t1.incident_type, t1.reported_on, consumers.id as consumer_id, consumers.name, consumers.meter_lat, consumers.meter_lng, consumers.namedloc from incidents t1 join consumers on t1.consumer_id = consumers.id where reported_on >= current_date - interval '3 days' order by reported_on desc"
       )
     ).rows;
 
@@ -54,4 +54,4 @@ async function addIncident(incident_type, consumer) {
   }
 }
 
-export { getRecentIncidents,  getFeed, addIncident };
+export { getRecentIncidents, getFeed, addIncident };

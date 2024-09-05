@@ -50,7 +50,7 @@ function getIncidentName(incident_type) {
 
 app.get("/feed", async (req, res) => {
   try {
-    const incidents = await incident.getRecentIncidents();
+    const incidents = await incident.getFeed();
 
     for (let incident of incidents) {
       incident.desc = getIncidentName(incident.incident_type);
