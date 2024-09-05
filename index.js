@@ -26,7 +26,7 @@ app.get("/", async (req, res) => {
           incident_name = "Dim supply";
           break;
       }
-      incident.name = incident_name;
+      incident.desc = incident_name;
     }
     res.json(incidents);
   } catch (err) {
