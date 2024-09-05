@@ -83,7 +83,7 @@ function sseStart(res) {
 
 // SSE new feed
 function sseNewFeed(res){
-  res.write("newFeed: " + newIncident + "\n\n");
+  res.write("newIncident: " + newIncident + "\n\n");
   newIncident = false;
 }
 
