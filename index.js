@@ -133,13 +133,14 @@ app.post("/notify-webhook", async (req, res) => {
               incident_type = 0;
               break;
           }
+          console.log(`Incident type ${incident_type} received via emoji`);
+          await incident.addIncident(incident_type, dbConsumer);
+          newIncident=true;
+          await consumer.sendAck(sender.wa_id);
         } else {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
         }
-        console.log(`Incident type ${incident_type} received via emoji`);
-        await incident.addIncident(incident_type, dbConsumer);
-        newIncident=true;
-        await consumer.sendAck(sender.wa_id);
+       
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
