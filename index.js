@@ -13,17 +13,11 @@ app.use(express.json());
 app.get("/", async (req, res) => {
   try {
     const result = await incident.getRecentIncidents();
-    res.render("status.ejs", {
-      apiKey: process.env.GOOGLE_MAPS_APIKEY,
-      result: result,
-    });
+    res.json(result);
   } catch (err) {
-    res.redirect("/error");
+    console.log(err);
+    res.status(501).json({ error: "Contact API owner." });
   }
-});
-
-app.get("/error", (req, res) => {
-  res.send("ERROR");
 });
 
 app.get("/notify-webhook", (req, res) => {
@@ -45,10 +39,9 @@ app.post("/notify-webhook", async (req, res) => {
     await consumer.sendReadReceipt(msg.id);
 
     const sender = req.body.entry[0].changes[0].value.contacts[0];
-    console.log(JSON.stringify(sender));
 
     const dbConsumer = await consumer.getConsumer(sender.wa_id);
-    console.log(dbConsumer);
+
     if (dbConsumer) {
       let incident_type;
       if (msg.type === "text") {
@@ -97,8 +90,7 @@ app.post("/notify-webhook", async (req, res) => {
             sender.profile.name
           );
           await consumer.sendLocationReq(sender.wa_id);
-        }
-        else {
+        } else {
           await consumer.sendNoLinkedPhoneFoundMsg(sender.wa_id);
         }
       } else {
