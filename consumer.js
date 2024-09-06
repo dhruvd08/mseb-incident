@@ -1,5 +1,9 @@
 import pg from "pg";
 import * as waba from "./waba.js";
+import { kml } from "@tmcw/togeojson";
+import { DOMParser } from "xmldom";
+import fs from "fs";
+import inside from "point-in-polygon-hao";
 
 const db = new pg.Client({
   user: process.env.DB_USER,
@@ -10,6 +14,26 @@ const db = new pg.Client({
 });
 
 db.connect();
+
+const kmlData = new DOMParser().parseFromString(
+  fs.readFileSync(`${process.cwd()}/public/kml/18gm2.kml`, "utf8")
+);
+const villages = kml(kmlData).features;
+
+function getVillageName(latitude, longitude) {
+  let villageName;
+  for (let village of villages) {
+    let boundary = village.geometry.coordinates;
+    if (inside(point, boundary)) {
+      villageName = village.properties.name;
+      console.log(`point in ${village.properties.name}`);
+      break;
+    } else {
+      console.log(`Not in ${village.properties.name}`);
+    }
+  }
+  return villageName;
+}
 
 async function sendReadReceipt(msgId) {
   await waba.sendReadReceipt(msgId);
@@ -29,9 +53,12 @@ async function addConsumer(consumerId, phone, name) {
 
 async function updateConsumer(phone, latitude, longitude, address) {
   try {
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_APIKEY}`);
-    const locationName = await response.json();
-    address = locationName.results[0].address_components[1].long_name;
+    // const response = await fetch(
+    //   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_APIKEY}`
+    // );
+    // const locationName = await response.json();
+    // address = locationName.results[0].address_components[1].long_name;
+    address = getVillageName(latitude, longitude);
     await db.query(
       "update consumers set meter_lat = $1, meter_lng = $2, namedloc=$3 where phone=$4",
       [latitude, longitude, address, phone]
