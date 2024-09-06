@@ -24,7 +24,7 @@ function getVillageName(latitude, longitude) {
   let villageName;
   for (let village of villages) {
     let boundary = village.geometry.coordinates;
-    if (inside(point, boundary)) {
+    if (inside([latitude, longitude], boundary)) {
       villageName = village.properties.name;
       console.log(`point in ${village.properties.name}`);
       break;
