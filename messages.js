@@ -11,6 +11,39 @@ const textMsg = {
   },
 };
 
+const ackMsg = {
+  "messaging_product": "whatsapp",
+  "recipient_type": "individual",
+  "to": "",
+  "type": "interactive",
+  "interactive": {
+    "type": "cta_url",
+
+    /* Header optional */
+    // "header": {
+    //   "type": "text",
+    //   "text": "<HEADER_TEXT>"
+    // },
+
+    /* Body optional */
+    "body": {
+      "text": "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती तुमच्या वीज कंपनीला तुम्हाला अधिक चांगली सेवा देण्यासाठी मदत करेल."
+    },
+
+    /* Footer optional */
+    // "footer": {
+    //   "text": "<FOOTER_TEXT>"
+    // },
+    "action": {
+      "name": "cta_url",
+      "parameters": {
+        "display_text": "अधिक तपशील पहा!",
+        "url": "https://eagle-5i6w.onrender.com/"
+      }
+    }
+  }
+}
+
 const locationReq = {
     messaging_product: "whatsapp",
     recipient_type: "individual",
@@ -80,4 +113,4 @@ const incidentSelection = {
     }
 }
 
-export { textMsg, readReceipt, incidentSelection, locationReq };
+export { textMsg, readReceipt, incidentSelection, locationReq, ackMsg };

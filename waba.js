@@ -33,11 +33,11 @@ async function sendIncidentTypeSelection(phone) {
 }
 
 async function sendAck(phone) {
-  let msg = msgTemplate.textMsg;
+  let msg = msgTemplate.ackMsg;
   msg.to = phone;
-  msg.text.preview_url=true;
-  msg.text.body =
-    "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती तुमच्या वीज कंपनीला तुम्हाला अधिक चांगली सेवा देण्यासाठी मदत करेल..\n\nअधिक तपशीलांसाठी https://eagle-5i6w.onrender.com/ ला भेट द्या.";
+  // msg.text.preview_url=true;
+  // msg.text.body =
+  //   "तुमच्या वीज पुरवठ्याची स्थिती कळवल्याबद्दल धन्यवाद. ही माहिती तुमच्या वीज कंपनीला तुम्हाला अधिक चांगली सेवा देण्यासाठी मदत करेल..\n\nअधिक तपशीलांसाठी https://eagle-5i6w.onrender.com/ ला भेट द्या.";
 
   await notifyConsumer(msg);
 }
