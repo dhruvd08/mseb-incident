@@ -19,7 +19,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/", async (req, res) => {
+app.get("/incidents", async (req, res) => {
   try {
     const incidents = await incident.getRecentIncidents();
     for (let incident of incidents) {
@@ -48,21 +48,21 @@ function getIncidentName(incident_type) {
   return incident_name;
 }
 
-app.get("/feed", async (req, res) => {
-  try {
-    const incidents = await incident.getFeed();
+// app.get("/feed", async (req, res) => {
+//   try {
+//     const incidents = await incident.getFeed();
 
-    for (let incident of incidents) {
-      incident.desc = getIncidentName(incident.incident_type);
-    }
-    res.json(incidents);
-  } catch (err) {
-    console.log(err);
-    res.status(501).json({ error: "Contact API owner." });
-  }
-});
+//     for (let incident of incidents) {
+//       incident.desc = getIncidentName(incident.incident_type);
+//     }
+//     res.json(incidents);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(501).json({ error: "Contact API owner." });
+//   }
+// });
 
-app.get("/newfeed", async (req, res) => {
+app.get("/incidents/subscribe", async (req, res) => {
   sseStart(res);
   sseNewFeed(res);
   //sseRandom(res);
