@@ -58,7 +58,9 @@ function sseStart(res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
-    Connection: "keep-alive",
+    'Content-Encoding': 'none',
+    'Connection': "keep-alive",
+    'Access-Control-Allow-Origin': '*'
   });
 }
 
