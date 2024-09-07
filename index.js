@@ -67,6 +67,7 @@ let newIncident = false;
 function sseNewFeed(res) {
   if (newIncident === true) {
     res.write("data: " + newIncident + "\n\n");
+    console.log("Sent new incident notification....");
     newIncident = false;
   }
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
