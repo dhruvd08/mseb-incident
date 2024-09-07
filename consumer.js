@@ -28,8 +28,6 @@ function getVillageName(latitude, longitude) {
       villageName = village.properties.name;
       console.log(`point in ${village.properties.name}`);
       break;
-    } else {
-      console.log(`Not in ${village.properties.name}`);
     }
   }
   return villageName;
@@ -51,14 +49,16 @@ async function addConsumer(consumerId, phone, name) {
   }
 }
 
-async function updateConsumer(phone, latitude, longitude, address) {
+async function updateConsumer(phone, latitude, longitude) {
   try {
-    // const response = await fetch(
-    //   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_APIKEY}`
-    // );
-    // const locationName = await response.json();
-    // address = locationName.results[0].address_components[1].long_name;
-    address = getVillageName(latitude, longitude);
+    let address = getVillageName(latitude, longitude);
+    if (address == undefined) {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_APIKEY}`
+      );
+      const locationName = await response.json();
+      address = locationName.results[0].address_components[1].long_name;
+    }
     await db.query(
       "update consumers set meter_lat = $1, meter_lng = $2, namedloc=$3 where phone=$4",
       [latitude, longitude, address, phone]
@@ -110,4 +110,5 @@ export {
   sendIncidentTypeSelection,
   sendLocationReq,
   sendAck,
+  villages,
 };

@@ -48,24 +48,9 @@ function getIncidentName(incident_type) {
   return incident_name;
 }
 
-// app.get("/feed", async (req, res) => {
-//   try {
-//     const incidents = await incident.getFeed();
-
-//     for (let incident of incidents) {
-//       incident.desc = getIncidentName(incident.incident_type);
-//     }
-//     res.json(incidents);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(501).json({ error: "Contact API owner." });
-//   }
-// });
-
-app.get("/incidents/subscribe", async (req, res) => {
+app.get("/subscribe", async (req, res) => {
   sseStart(res);
   sseNewFeed(res);
-  //sseRandom(res);
 });
 
 // SSE head
@@ -85,12 +70,6 @@ function sseNewFeed(res) {
     newIncident = false;
   }
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
-}
-
-// SSE random number
-function sseRandom(res) {
-  res.write("data: " + (Math.floor(Math.random() * 1000) + 1) + "\n\n");
-  setTimeout(() => sseRandom(res), Math.random() * 3000);
 }
 
 app.get("/notify-webhook", (req, res) => {
@@ -146,12 +125,7 @@ app.post("/notify-webhook", async (req, res) => {
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
-        await consumer.updateConsumer(
-          sender.wa_id,
-          latitude,
-          longitude,
-          `${name}`
-        );
+        await consumer.updateConsumer(sender.wa_id, latitude, longitude);
         await consumer.sendIncidentTypeSelection(sender.wa_id);
       }
     } else {
@@ -190,3 +164,4 @@ function isConsumerId(inputtxt) {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
