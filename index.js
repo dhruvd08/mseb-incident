@@ -103,11 +103,11 @@ app.get("/notify-webhook", (req, res) => {
   }
 });
 
-app.get("/newincident", async (req, res) => {
-  newIncident = { id: new Date().getSeconds(), new: true };
-  //sseNewFeed(res);
-  res.sendStatus(200);
-});
+// app.get("/newincident", async (req, res) => {
+//   newIncident = { id: new Date().getSeconds(), new: true };
+//   //sseNewFeed(res);
+//   res.sendStatus(200);
+// });
 
 app.post("/notify-webhook", async (req, res) => {
   if (req.body.entry[0].changes[0].value.messages) {
