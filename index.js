@@ -84,17 +84,12 @@ function sseNewFeed(res) {
   res.write("event: message\n");
   res.write("data: " + newIncident.new + "\n");
   res.write("id: " + new Date().getSeconds() + "\n\n");
-  console.log("Sent new incident notification....");
+  //console.log("Sent new incident notification....");
   newIncident.new = false;
   //}
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
 
-  res.on("close", () => {
-    clearInterval(interval);
-
-    res.end();
-  });
-}
+ }
 
 app.get("/notify-webhook", (req, res) => {
   console.log(req.query);
