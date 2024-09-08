@@ -64,13 +64,16 @@ function sseStart(res) {
   });
 }
 
-let newIncident = false;
+let newIncident = { id: 0, new: false };
 // SSE new feed
 function sseNewFeed(res) {
-  if (newIncident === true) {
-    res.write("data: " + newIncident + "\n\n");
+  if (newIncident.new) {
+    res.write("retry: 60000\n\n");
+    res.write("event: message\n\n");
+    res.write("data: " + newIncident.new + "\n\n");
+    res.write("id: " + newIncident.id + "\n\n");
     console.log("Sent new incident notification....");
-    newIncident = false;
+    newIncident.new = false;
   }
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
 }
@@ -111,7 +114,7 @@ app.post("/notify-webhook", async (req, res) => {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
         await incident.addIncident(incident_type, dbConsumer);
-        newIncident = true;
+        newIncident = { id: new Date().getMilliseconds(), new: true };
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
