@@ -66,17 +66,17 @@ function sseStart(res) {
   });
 }
 
-let newIncident = { id: 0, new: false };
+let newIncident = { id: 0, new: true };
 // SSE new feed
 function sseNewFeed(res) {
-  //if (newIncident.new) {
+  if (newIncident.new) {
     res.write("retry: 60000\n\n");
     res.write("event: message\n\n");
     res.write("data: " + newIncident.new + "\n\n");
     res.write("id: " + newIncident.id + "\n\n");
     console.log("Sent new incident notification....");
     newIncident.new = false;
-  //}
+  }
   setTimeout(() => sseNewFeed(res), Math.random() * 10000);
 }
 
