@@ -72,7 +72,7 @@ async function updateConsumer(phone, latitude, longitude) {
 async function getConsumer(phone) {
   try {
     let result = (
-      await db.query("select id, name from consumers where phone=$1", [phone])
+      await db.query("select id, name, meter_lat, meter_lng, namedloc from consumers where phone=$1", [phone])
     ).rows;
     if (result.length === 0) {
       return undefined;
