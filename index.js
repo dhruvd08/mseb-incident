@@ -58,9 +58,9 @@ function sseStart(res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
-    'Content-Encoding': 'none',
-    'Connection': "keep-alive",
-    'Access-Control-Allow-Origin': '*'
+    "Content-Encoding": "none",
+    Connection: "keep-alive",
+    "Access-Control-Allow-Origin": "*",
   });
 }
 
@@ -100,23 +100,10 @@ app.post("/notify-webhook", async (req, res) => {
     if (dbConsumer) {
       let incident_type;
       if (msg.type === "text") {
-        const content = msg.text.body;
-        if (["😟", "🙂", "😐"].includes(content)) {
-          switch (content) {
-            case "😐":
-              incident_type = 2;
-              break;
-            case "🙂":
-              incident_type = 1;
-              break;
-            case "😟":
-              incident_type = 0;
-              break;
-          }
-          console.log(`Incident type ${incident_type} received via emoji`);
-          await incident.addIncident(incident_type, dbConsumer);
-          newIncident = true;
-          await consumer.sendAck(sender.wa_id);
+        // If meter location details doesn't exist, ask for it again..
+        console.log(`DB consumer ${JSON.stringify(dbConsumer)}`);
+        if (dbConsumer.namedloc === undefined) {
+          await consumer.sendLocationReq(sender.wa_id);
         } else {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
         }
@@ -167,4 +154,3 @@ function isConsumerId(inputtxt) {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-

@@ -124,23 +124,28 @@ async function getUptimeByVillage() {
         mostActiveUserCount = user.length;
       }
     }
-
-    //console.log(mostActiveUser[0].namedloc);
     let upTime = 0;
-    const startTime = new Date('7/9/2024').getMilliseconds();
-    const totalDuration = new Date().getMilliseconds() - startTime;
-    //console.log(totalDuration);
-    let timeDiff;
-    for (let incident of mostActiveUser){
-        timeDiff = Math.abs(new Date().getMilliseconds() - incident.reported_on.getMilliseconds());
-        //console.log(incident.incident_type);  
-        if (incident.incident_type !== 0){
-            timeDiff = 0-timeDiff;
-        }
+    let startTime = new Date("2024-09-07 12:00:00");
+    const currentTime = new Date("2024-09-07 22:00:00");
+    const totalDuration = currentTime - startTime;
+    let i = 0;
+    let previousType = 1;
+    for (let incident of mostActiveUser.reverse()) {
+      let reportedOn = new Date(incident.reported_on);
+      if (previousType === 1) {
+        upTime += Math.round((reportedOn - startTime) / 1000 / 60 / 60);
+        startTime = reportedOn;
+      }
 
-        upTime += timeDiff;
+      i++;
+      if (i === (mostActiveUser.length) && incident.incident_type === 1) {
+        upTime += Math.round((currentTime - reportedOn) / 1000 / 60 / 60);
+      }
+      previousType = incident.incident_type;
     }
-    console.log(`${village} -> ${upTime * 100 / totalDuration}%`);
+    console.log("------------------------");
+    console.log(`${village} has an power availabilty for ${Math.round(upTime)} hours in last ${totalDuration/1000/60/60} hours.\n\nUptime ${upTime*100/10}%.`);
+    console.log("------------------------");
   }
 }
 
@@ -156,11 +161,8 @@ async function setupIncidents() {
   db.connect();
 
   const consumers = (await db.query("select * from consumers")).rows;
-  for (let i = 0; i < 5; i++) {
-    incident.addIncident(
-      Math.floor(Math.random() * (3 - 0)) + 0,
-      consumers[Math.floor(Math.random() * consumers.length)]
-    );
+  for (let i = 0; i < 3; i++) {
+    incident.addIncident(Math.floor(Math.random() * (3 - 0)) + 0, consumers[0]);
   }
 }
 
