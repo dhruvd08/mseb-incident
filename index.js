@@ -66,7 +66,7 @@ function sseStart(res) {
   });
 }
 
-let newIncident = { id: 0, new: true };
+let newIncident = { id: 0, new: false };
 // SSE new feed
 function sseNewFeed(res) {
   if (newIncident.new) {
