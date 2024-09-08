@@ -161,11 +161,14 @@ async function setupIncidents() {
   db.connect();
 
   const consumers = (await db.query("select * from consumers")).rows;
-  for (let i = 0; i < 3; i++) {
-    incident.addIncident(Math.floor(Math.random() * (3 - 0)) + 0, consumers[0]);
+  console.log(consumers.length);
+  for (let i = 0; i < 5; i++) {
+    incident.addIncident(Math.floor(Math.random() * (3 - 0)) + 0, 
+    //consumers[Math.floor(Math.random() * consumers.length)]);
+    consumers[0]);
   }
 }
 
 //setupConsumers();
-//setupIncidents();
-getUptimeByVillage();
+// setupIncidents();
+//getUptimeByVillage();

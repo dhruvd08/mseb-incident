@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://eagle-5i6w.onrender.com");
   // res.header("Access-Control-Allow-Origin", "https://graph.facebook.com");
-  // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  //res.header("Access-Control-Allow-Origin", "http://localhost:3001");
 
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -69,15 +69,15 @@ function sseStart(res) {
 let newIncident = { id: 0, new: false };
 // SSE new feed
 function sseNewFeed(res) {
-  if (newIncident.new) {
+  //if (newIncident.new) {
     res.write("retry: 60000\n\n");
     res.write("event: message\n\n");
     res.write("data: " + newIncident.new + "\n\n");
     res.write("id: " + newIncident.id + "\n\n");
     console.log("Sent new incident notification....");
     newIncident.new = false;
-  }
-  setTimeout(() => sseNewFeed(res), Math.random() * 3000);
+  //}
+  setTimeout(() => sseNewFeed(res), Math.random() * 10000);
 }
 
 app.get("/notify-webhook", (req, res) => {
