@@ -102,7 +102,7 @@ app.post("/notify-webhook", async (req, res) => {
       if (msg.type === "text") {
         // If meter location details doesn't exist, ask for it again..
         console.log(`DB consumer ${JSON.stringify(dbConsumer)}`);
-        if (dbConsumer.namedloc === undefined) {
+        if (dbConsumer.namedloc === "null") {
           await consumer.sendLocationReq(sender.wa_id);
         } else {
           await consumer.sendIncidentTypeSelection(sender.wa_id);
