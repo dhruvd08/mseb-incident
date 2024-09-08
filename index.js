@@ -11,12 +11,15 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://eagle-5i6w.onrender.com");
+  //res.header("Access-Control-Allow-Origin", "https://eagle-5i6w.onrender.com");
   // res.header("Access-Control-Allow-Origin", "https://graph.facebook.com");
-  //res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3001");
 
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
@@ -50,34 +53,47 @@ function getIncidentName(incident_type) {
 }
 
 app.get("/subscribe", async (req, res) => {
+  //console.log(`Subscribe was called....${req}`);
   sseStart(res);
   sseNewFeed(res);
 });
 
 // SSE head
 function sseStart(res) {
-  res.writeHead(200, {
-    "Content-Type": "text/event-stream",
-    "X-Accel-Buffering": "no",
-    "Cache-Control": "no-cache",
-    "Content-Encoding": "none",
-    "Connection": "keep-alive",
-    "Access-Control-Allow-Origin": "*",
-  });
+  // res.writeHead(200, {
+  //   "Content-Type": "text/event-stream",
+  //   "X-Accel-Buffering": "no",
+  //   "Cache-Control": "no-cache",
+  //   "Content-Encoding": "none",
+  //   "Connection": "keep-alive",
+  //   "Access-Control-Allow-Origin": "*",
+  // });
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("Cache-Control", "none");
+  res.setHeader("X-Accel-Buffering", "no");
+  res.flushHeaders();
 }
 
 let newIncident = { id: 0, new: false };
 // SSE new feed
 function sseNewFeed(res) {
-  if (newIncident.new) {
-    res.write("retry: 60000\n\n");
-    res.write("event: message\n\n");
-    res.write("data: " + newIncident.new + "\n\n");
-    res.write("id: " + newIncident.id + "\n\n");
-    console.log("Sent new incident notification....");
-    newIncident.new = false;
-  }
-  setTimeout(() => sseNewFeed(res), Math.random() * 10000);
+  //if (newIncident.new) {
+  res.write("retry: 60000\n");
+  res.write("event: message\n");
+  res.write("data: " + newIncident.new + "\n");
+  res.write("id: " + new Date().getSeconds() + "\n\n");
+  console.log("Sent new incident notification....");
+  newIncident.new = false;
+  //}
+  setTimeout(() => sseNewFeed(res), Math.random() * 3000);
+
+  res.on("close", () => {
+    clearInterval(interval);
+
+    res.end();
+  });
 }
 
 app.get("/notify-webhook", (req, res) => {
@@ -90,6 +106,12 @@ app.get("/notify-webhook", (req, res) => {
   } else {
     res.sendStatus(401);
   }
+});
+
+app.get("/newincident", async (req, res) => {
+  newIncident = { id: new Date().getSeconds(), new: true };
+  //sseNewFeed(res);
+  res.sendStatus(200);
 });
 
 app.post("/notify-webhook", async (req, res) => {
@@ -116,7 +138,7 @@ app.post("/notify-webhook", async (req, res) => {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
         await incident.addIncident(incident_type, dbConsumer);
-        newIncident = { id: new Date().getMilliseconds(), new: true };
+        newIncident = { id: new Date().getSeconds(), new: true };
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
