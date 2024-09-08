@@ -57,6 +57,7 @@ app.get("/subscribe", async (req, res) => {
 function sseStart(res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
+    "X-Accel-Buffering": "no",
     "Cache-Control": "no-cache",
     "Content-Encoding": "none",
     "Connection": "keep-alive",
