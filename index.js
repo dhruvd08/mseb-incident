@@ -59,7 +59,7 @@ function sseStart(res) {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
     "Content-Encoding": "none",
-    Connection: "keep-alive",
+    "Connection": "keep-alive",
     "Access-Control-Allow-Origin": "*",
   });
 }
