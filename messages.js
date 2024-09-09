@@ -66,6 +66,10 @@ const readReceipt = {
   message_id: "",
 };
 
+function getImg(){
+  return imgs[Math.floor(Math.random() * imgs.length)];
+}
+
 const incidentSelection = {
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
@@ -76,7 +80,7 @@ const incidentSelection = {
         "header": {
             "type": "image",
             "image": {
-                "id": imgs[Math.floor(Math.random() * imgs.length)]
+                "id": getImg()
             }
         },
         "body": {
