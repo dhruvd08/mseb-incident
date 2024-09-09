@@ -67,7 +67,9 @@ const readReceipt = {
 };
 
 function getImg(){
-  return imgs[Math.floor(Math.random() * imgs.length)];
+  const randomImg =  imgs[Math.floor(Math.random() * imgs.length)];
+  console.log(`Random Img ${randomImg}`);
+  return randomImg;
 }
 
 const incidentSelection = {
