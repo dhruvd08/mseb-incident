@@ -10,13 +10,41 @@ const db = new pg.Client({
 
 db.connect();
 
-async function getUptimeByVillage(villageName) {
+/*
+1. Get Unique villages
+2. Get Uptime by village for a given duration
+3. Get non-one incidents by village for a given duration
+4. Get average resolution time by village for a given duration
+*/
+
+async function getUniqueVillages() {
   const allData = (
     await db.query(
-      "select * from incidents inner join consumers on incidents.consumer_id=consumers.id where consumers.namedloc=$1 order by incidents.reported_on asc",
-      [villageName]
+      "select * from incidents inner join consumers on incidents.consumer_id=consumers.id order by incidents.reported_on asc",
     )
   ).rows;
+
+  let uniqueVillages = [];
+  for (let record of allData) {
+    if (!uniqueVillages.includes(record.namedloc)) {
+      uniqueVillages.push(record.namedloc);
+    }
+  }
+
+  return uniqueVillages;
+}
+
+async function getUptimeByVillage(villageName, start, end = new Date()) {
+  console.log(start);
+  console.log(end);
+  const allData = (
+    await db.query(
+      "select * from incidents inner join consumers on incidents.consumer_id=consumers.id where consumers.namedloc=$1 and cast($2 as Date) < reported_on and reported_on < cast($3 as Date) order by incidents.reported_on asc",
+      [villageName, start, end]
+    )
+  ).rows;
+
+  console.log(allData.length);
 
   let uniqueConsumers = [];
   for (let record of allData) {
@@ -49,9 +77,9 @@ async function getUptimeByVillage(villageName) {
   //console.log(mostActiveUser);
 
   let upTime = 0;
-  let startTime = new Date("2024-09-07 00:00:00");
-  const currentTime = new Date();
-  const totalDuration = (currentTime - startTime) / 1000 / 60 /60;
+  let startTime = start;
+  const endTime = end;
+  const totalDuration = (endTime - startTime) / 1000 / 60 /60;
   console.log(`Duration ${totalDuration}`);
   let i = 0;
   let previousType = 1;
@@ -64,16 +92,18 @@ async function getUptimeByVillage(villageName) {
 
     i++;
     if (i === mostActiveUser.length && incident.incident_type === 1) {
-      upTime += Math.round((currentTime - reportedOn) / 1000 / 60 / 60);
+      upTime += Math.round((endTime - reportedOn) / 1000 / 60 / 60);
       console.log("went into second if statement")
     }
     previousType = incident.incident_type;
   }
   upTime = upTime * 100 / totalDuration;
 
-  return upTime;
+  return {upTime: upTime};
 }
 
-export { getUptimeByVillage };
+export { getUptimeByVillage, getUniqueVillages };
 
-console.log(Math.round(await getUptimeByVillage("Varoti Kh.")) + " %");
+//console.log((await getUniqueVillages()));
+
+console.log((await getUptimeByVillage("Varoti Kh.", new Date("2024-09-08"), new Date())));

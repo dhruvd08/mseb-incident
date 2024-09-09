@@ -11,9 +11,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://eagle-5i6w.onrender.com");
-  // res.header("Access-Control-Allow-Origin", "https://graph.facebook.com");
-  //res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
 
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header(
