@@ -1,4 +1,4 @@
-const imgs = ["1097290398666940"];
+const imgs = ["1097290398666940", "831047165806215", "1026662142263883", "560189116344032"];
 
 const textMsg = {
   messaging_product: "whatsapp",
