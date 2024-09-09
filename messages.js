@@ -1,5 +1,11 @@
 const imgs = ["1097290398666940", "831047165806215", "1026662142263883", "560189116344032"];
 
+function getImg(){
+  const randomImg =  imgs[Math.floor(Math.random() * imgs.length)];
+  console.log(`Random Img ${randomImg}`);
+  return randomImg;
+}
+
 const textMsg = {
   messaging_product: "whatsapp",
   recipient_type: "individual",
@@ -66,11 +72,7 @@ const readReceipt = {
   message_id: "",
 };
 
-function getImg(){
-  const randomImg =  imgs[Math.floor(Math.random() * imgs.length)];
-  console.log(`Random Img ${randomImg}`);
-  return randomImg;
-}
+
 
 const incidentSelection = {
     "messaging_product": "whatsapp",
@@ -82,7 +84,7 @@ const incidentSelection = {
         "header": {
             "type": "image",
             "image": {
-                "id": getImg()
+                "id": ""
             }
         },
         "body": {
@@ -119,4 +121,4 @@ const incidentSelection = {
     }
 }
 
-export { textMsg, readReceipt, incidentSelection, locationReq, ackMsg };
+export { textMsg, readReceipt, incidentSelection, locationReq, ackMsg, getImg };

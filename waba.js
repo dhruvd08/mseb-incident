@@ -27,6 +27,7 @@ async function sendNoLinkedPhoneFoundMsg(phone) {
 
 async function sendIncidentTypeSelection(phone) {
   let msg = msgTemplate.incidentSelection;
+  msg.interactive.header.image.id = msgTemplate.getImg();
   msg.to = phone;
 
   await notifyConsumer(msg);
