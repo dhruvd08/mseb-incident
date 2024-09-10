@@ -68,7 +68,9 @@ function sseNewFeed(res) {
   res.write("event: message\n");
   res.write("data: " + JSON.stringify(newIncident) + "\n");
   res.write("id: " + new Date().getSeconds() + "\n\n");
-  //console.log("Sent new incident notification....");
+  if (newIncident.id){
+    console.log("Sent new incident notification....");
+  }
   newIncident = {};
   //}
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
