@@ -10,6 +10,22 @@ const db = new pg.Client({
 
 db.connect();
 
+function getIncidentName(incident_type) {
+  let incident_name;
+  switch (incident_type) {
+    case 0:
+      incident_name = "Power failure";
+      break;
+    case 1:
+      incident_name = "Full supply";
+      break;
+    case 2:
+      incident_name = "Dim supply";
+      break;
+  }
+  return incident_name;
+}
+
 async function getRecentIncidents() {
   try {
     let result = (
@@ -44,14 +60,21 @@ async function addIncident(incident_type, consumer) {
   console.log(`${incident_type} for ${JSON.stringify(consumer)}`);
 
   try {
-    await db.query(
-      "insert into incidents (incident_type, reported_on, consumer_id) values ($1, $2, $3)",
+    let newIncident = (await db.query(
+      "insert into incidents (incident_type, reported_on, consumer_id) values ($1, $2, $3) returning *",
       [incident_type, new Date(), consumer.id]
-    );
+    )).rows[0];
+    newIncident.meter_lat = consumer.meter_lat;
+    newIncident.meter_lng = consumer.meter_lng;
+    newIncident.namedloc= consumer.namedloc;
+    newIncident.desc= getIncidentName(newIncident.incident_type);
+    newIncident.name=consumer.name;
+    console.log(`In addIncident function ${JSON.stringify(newIncident)}`);
+    return newIncident;
   } catch (err) {
     console.log(err);
     throw err;
   }
 }
 
-export { getRecentIncidents, getFeed, addIncident };
+export { getRecentIncidents, getFeed, addIncident, getIncidentName };

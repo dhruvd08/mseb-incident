@@ -24,8 +24,8 @@ app.use(function (req, res, next) {
 app.get("/incidents", async (req, res) => {
   try {
     const incidents = await incident.getRecentIncidents();
-    for (let incident of incidents) {
-      incident.desc = getIncidentName(incident.incident_type);
+    for (let inc of incidents) {
+      inc.desc = incident.getIncidentName(inc.incident_type);
     }
     res.json(incidents);
   } catch (err) {
@@ -34,21 +34,7 @@ app.get("/incidents", async (req, res) => {
   }
 });
 
-function getIncidentName(incident_type) {
-  let incident_name;
-  switch (incident_type) {
-    case 0:
-      incident_name = "Power failure";
-      break;
-    case 1:
-      incident_name = "Full supply";
-      break;
-    case 2:
-      incident_name = "Dim supply";
-      break;
-  }
-  return incident_name;
-}
+
 
 app.get("/subscribe", async (req, res) => {
   //console.log(`Subscribe was called....${req}`);
@@ -74,16 +60,16 @@ function sseStart(res) {
   res.flushHeaders();
 }
 
-let newIncident = { id: 0, new: false };
+let newIncident = {};
 // SSE new feed
 function sseNewFeed(res) {
   //if (newIncident.new) {
   res.write("retry: 60000\n");
   res.write("event: message\n");
-  res.write("data: " + newIncident.new + "\n");
+  res.write("data: " + JSON.stringify(newIncident) + "\n");
   res.write("id: " + new Date().getSeconds() + "\n\n");
   //console.log("Sent new incident notification....");
-  newIncident.new = false;
+  newIncident = {};
   //}
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
 
@@ -102,7 +88,9 @@ app.get("/notify-webhook", (req, res) => {
 });
 
 // app.get("/newincident", async (req, res) => {
-//   newIncident = { id: new Date().getSeconds(), new: true };
+//   newIncident = (await incident.addIncident(1, (await consumer.getConsumer('8010042952'))));
+//   console.log(newIncident);
+//   //newIncident = {};
 //   //sseNewFeed(res);
 //   res.sendStatus(200);
 // });
@@ -130,8 +118,7 @@ app.post("/notify-webhook", async (req, res) => {
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
-        await incident.addIncident(incident_type, dbConsumer);
-        newIncident = { id: new Date().getSeconds(), new: true };
+        newIncident = (await incident.addIncident(incident_type, dbConsumer));
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
