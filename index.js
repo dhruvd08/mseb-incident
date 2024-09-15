@@ -34,7 +34,12 @@ app.get("/villages", async (req, res) => {
 
 function getFirstDateOfCurrentMonth() {
   const today = new Date();
-  return new Date(today.getFullYear(), today.getMonth(), 1);
+  return new Date(today.getFullYear(), today.getMonth() + 1, 1);
+}
+
+function getLastDateOfCurrentMonth() {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth() + 1, 0);
 }
 
 app.get("/uptime", async (req, res) => {
@@ -44,7 +49,7 @@ app.get("/uptime", async (req, res) => {
       const uptime = await insights.getUptimeByVillage(
         req.query.village,
         getFirstDateOfCurrentMonth(),
-        new Date()
+        getLastDateOfCurrentMonth()
       );
       console.log(uptime);
       res.json(uptime);
@@ -64,7 +69,7 @@ app.get("/incidentcount", async (req, res) => {
       const incidentCount = await insights.getIncidentCount(
         req.query.village,
         getFirstDateOfCurrentMonth(),
-        new Date()
+        getLastDateOfCurrentMonth()
       );
       res.json(incidentCount);
     } catch (err) {
@@ -81,7 +86,8 @@ app.get("/resolutiontime", async (req, res) => {
     try {
       const resolutionTime = await insights.getResolutionTime(
         req.query.village,
-        getFirstDateOfCurrentMonth(), new Date()
+        getFirstDateOfCurrentMonth(),
+        getLastDateOfCurrentMonth()
       );
       console.log(resolutionTime);
       res.json(resolutionTime);
