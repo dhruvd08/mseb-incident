@@ -12,7 +12,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
+  res.header("Access-Control-Allow-Origin", "http://localhost:3001");//process.env.FRONTEND_URL);
 
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header(
@@ -162,7 +162,7 @@ app.get("/notify-webhook", (req, res) => {
 app.get("/newincident", async (req, res) => {
   newIncident = await incident.addIncident(
     1,
-    await consumer.getConsumer("8010042952")
+    await consumer.getConsumer("8010809158")
   );
   console.log(newIncident);
   //newIncident = {};

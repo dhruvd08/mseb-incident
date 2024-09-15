@@ -54,6 +54,8 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       )
     ).rows;
 
+    console.log(allData);
+
     let uniqueConsumers = [];
     for (let record of allData) {
       if (!uniqueConsumers.includes(record.consumer_id)) {
@@ -82,7 +84,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       }
     }
 
-
+ 
 
     let upTime = 0;
     let startTime = new Date(start);
@@ -109,7 +111,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       }
       previousIncidentType = incident.incident_type;
     }
-    console.log(`Uptime ${upTime}`);
+    console.log(`Uptime ${upTime}` );
     upTime = (upTime * 100) / totalDuration;
     return { upTime_inPerc: upTime };
   } catch (err) {
@@ -260,9 +262,9 @@ export {
 //console.log((await getUniqueVillages()));
 
 // console.log(
-//   await getIncidentCount(
-//     "Varoti Kh.",
+//   await getUptimeByVillage(
+//     "Harpud",
 //     new Date("2024-09-1"),
-//     new Date("2024-09-14")
+//     new Date("2024-09-16")
 //   )
 // );
