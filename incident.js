@@ -1,5 +1,11 @@
 import pg from "pg";
 
+pg.types.setTypeParser(pg.types.builtins.DATE, value => value)
+
+pg.types.setTypeParser(pg.types.builtins.TIMESTAMP, value => value)
+
+pg.types.setTypeParser(pg.types.builtins.TIMESTAMPTZ, value => value)
+
 const db = new pg.Client({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,

@@ -1,6 +1,7 @@
 import express from "express";
 import * as incident from "./incident.js";
 import * as consumer from "./consumer.js";
+import * as insights from "./insights.js";
 
 const app = express();
 
@@ -21,6 +22,78 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.get("/villages", async (req, res) => {
+  try {
+    const villages = await insights.getUniqueVillages();
+    res.json(villages);
+  } catch (err) {
+    console.log(err);
+    res.status(501).json({ error: "Contact API owner." });
+  }
+});
+
+function getFirstDateOfCurrentMonth() {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth(), 1);
+}
+
+app.get("/uptime", async (req, res) => {
+  console.log(req.query.village);
+  if (req.query.village) {
+    try {
+      const uptime = await insights.getUptimeByVillage(
+        req.query.village,
+        getFirstDateOfCurrentMonth(),
+        new Date()
+      );
+      console.log(uptime);
+      res.json(uptime);
+    } catch (err) {
+      console.log(err);
+      res.status(501).json({ error: "Contact API owner." });
+    }
+  } else {
+    res.status(400).json({ error: "Invalid request." });
+  }
+});
+
+app.get("/incidentcount", async (req, res) => {
+  console.log(req.query.village);
+  if (req.query.village) {
+    try {
+      const incidentCount = await insights.getIncidentCount(
+        req.query.village,
+        getFirstDateOfCurrentMonth(),
+        new Date()
+      );
+      res.json(incidentCount);
+    } catch (err) {
+      console.log(err);
+      res.status(501).json({ error: "Contact API owner." });
+    }
+  } else {
+    res.status(400).json({ error: "Invalid request." });
+  }
+});
+
+app.get("/resolutiontime", async (req, res) => {
+  if (req.query.village) {
+    try {
+      const resolutionTime = await insights.getResolutionTime(
+        req.query.village,
+        getFirstDateOfCurrentMonth(), new Date()
+      );
+      console.log(resolutionTime);
+      res.json(resolutionTime);
+    } catch (err) {
+      console.log(err);
+      res.status(501).json({ error: "Contact API owner." });
+    }
+  } else {
+    res.status(400).json({ error: "Invalid request." });
+  }
+});
+
 app.get("/incidents", async (req, res) => {
   try {
     const incidents = await incident.getRecentIncidents();
@@ -33,8 +106,6 @@ app.get("/incidents", async (req, res) => {
     res.status(501).json({ error: "Contact API owner." });
   }
 });
-
-
 
 app.get("/subscribe", async (req, res) => {
   //console.log(`Subscribe was called....${req}`);
@@ -68,14 +139,13 @@ function sseNewFeed(res) {
   res.write("event: message\n");
   res.write("data: " + JSON.stringify(newIncident) + "\n");
   res.write("id: " + new Date().getSeconds() + "\n\n");
-  if (newIncident.id){
+  if (newIncident.id) {
     console.log("Sent new incident notification....");
   }
   newIncident = {};
   //}
   setTimeout(() => sseNewFeed(res), Math.random() * 3000);
-
- }
+}
 
 app.get("/notify-webhook", (req, res) => {
   console.log(req.query);
@@ -89,13 +159,16 @@ app.get("/notify-webhook", (req, res) => {
   }
 });
 
-// app.get("/newincident", async (req, res) => {
-//   newIncident = (await incident.addIncident(1, (await consumer.getConsumer('8010042952'))));
-//   console.log(newIncident);
-//   //newIncident = {};
-//   //sseNewFeed(res);
-//   res.sendStatus(200);
-// });
+app.get("/newincident", async (req, res) => {
+  newIncident = await incident.addIncident(
+    1,
+    await consumer.getConsumer("8010042952")
+  );
+  console.log(newIncident);
+  //newIncident = {};
+  //sseNewFeed(res);
+  res.sendStatus(200);
+});
 
 app.post("/notify-webhook", async (req, res) => {
   if (req.body.entry[0].changes[0].value.messages) {
@@ -120,7 +193,7 @@ app.post("/notify-webhook", async (req, res) => {
       } else if (msg.type === "interactive") {
         incident_type = msg.interactive.button_reply.id;
         console.log(`Incident type ${incident_type} received via button click`);
-        newIncident = (await incident.addIncident(incident_type, dbConsumer));
+        newIncident = await incident.addIncident(incident_type, dbConsumer);
         await consumer.sendAck(sender.wa_id);
       } else if (msg.type === "location") {
         const { latitude, longitude, address, name } = msg.location;
