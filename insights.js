@@ -50,7 +50,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
   try {
     const allData = (
       await db.query(
-        "select * from incidents inner join consumers on incidents.consumer_id=consumers.id where consumers.namedloc=$1 and cast($2 as Date) < reported_on and reported_on < cast($3 as Date) order by incidents.reported_on asc",
+        "select incidents.id, incident_type, reported_on, incidents.consumer_id as consumer_id from incidents inner join consumers on incidents.consumer_id=consumers.id where consumers.namedloc=$1 and cast($2 as Date) < reported_on and reported_on < cast($3 as Date) order by incidents.reported_on asc",
         [villageName, start, end]
       )
     ).rows;
