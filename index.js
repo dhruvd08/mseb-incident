@@ -43,7 +43,7 @@ function getLastDateOfCurrentMonth() {
 }
 
 app.get("/uptime", async (req, res) => {
-  console.log(req.query.village);
+  //console.log(req.query.village);
   if (req.query.village) {
     try {
       const uptime = await insights.getUptimeByVillage(
@@ -51,7 +51,7 @@ app.get("/uptime", async (req, res) => {
         getFirstDateOfCurrentMonth(),
         getLastDateOfCurrentMonth()
       );
-      console.log(uptime);
+      //console.log(uptime);
       res.json(uptime);
     } catch (err) {
       console.log(err);
@@ -63,7 +63,7 @@ app.get("/uptime", async (req, res) => {
 });
 
 app.get("/incidentcount", async (req, res) => {
-  console.log(req.query.village);
+  //console.log(req.query.village);
   if (req.query.village) {
     try {
       const incidentCount = await insights.getIncidentCount(
@@ -89,7 +89,7 @@ app.get("/resolutiontime", async (req, res) => {
         getFirstDateOfCurrentMonth(),
         getLastDateOfCurrentMonth()
       );
-      console.log(resolutionTime);
+      //console.log(resolutionTime);
       res.json(resolutionTime);
     } catch (err) {
       console.log(err);
@@ -165,16 +165,16 @@ app.get("/notify-webhook", (req, res) => {
   }
 });
 
-app.get("/newincident", async (req, res) => {
-  newIncident = await incident.addIncident(
-    1,
-    await consumer.getConsumer("8010809158")
-  );
-  console.log(newIncident);
-  //newIncident = {};
-  //sseNewFeed(res);
-  res.sendStatus(200);
-});
+// app.get("/newincident", async (req, res) => {
+//   newIncident = await incident.addIncident(
+//     1,
+//     await consumer.getConsumer("8010809158")
+//   );
+//   console.log(newIncident);
+//   //newIncident = {};
+//   //sseNewFeed(res);
+//   res.sendStatus(200);
+// });
 
 app.post("/notify-webhook", async (req, res) => {
   if (req.body.entry[0].changes[0].value.messages) {
