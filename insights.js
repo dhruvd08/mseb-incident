@@ -244,7 +244,7 @@ async function getResolutionTime(villageName, start, end = new Date()) {
 
     return {
       averageResolutionTime_inMins:
-        totalResolutionTime / numberOfIncidentsResolved,
+        numberOfIncidentsResolved !== 0 ? totalResolutionTime / numberOfIncidentsResolved : 0,
       incidentsResolvedCount: numberOfIncidentsResolved,
     };
   } catch (err) {
