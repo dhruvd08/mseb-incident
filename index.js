@@ -34,7 +34,7 @@ app.get("/villages", async (req, res) => {
 
 function getFirstDateOfCurrentMonth() {
   const today = new Date();
-  return new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  return new Date(today.getFullYear(), today.getMonth(), 1);
 }
 
 function getLastDateOfCurrentMonth() {

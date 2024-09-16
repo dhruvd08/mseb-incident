@@ -46,6 +46,7 @@ async function getUniqueVillages() {
 }
 
 async function getUptimeByVillage(villageName, start, end = new Date()) {
+  console.log(`Start date: ${start}\n End date ${end}`);
   try {
     const allData = (
       await db.query(
