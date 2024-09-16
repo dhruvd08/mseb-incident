@@ -89,7 +89,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
 
     let upTime = 0;
     let startTime = new Date(start);
-    const endTime = new Date(end);
+    const endTime = new Date();
     const totalDuration = (endTime - startTime) / 1000 / 60;
     //console.log(`Duration ${totalDuration}`);
     let i = 0;
