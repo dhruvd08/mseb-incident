@@ -55,7 +55,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       )
     ).rows;
 
-    console.log(allData);
+    //console.log(allData);
 
     let uniqueConsumers = [];
     for (let record of allData) {
@@ -91,13 +91,13 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
     let startTime = new Date(start);
     const endTime = new Date(end);
     const totalDuration = (endTime - startTime) / 1000 / 60;
-    console.log(`Duration ${totalDuration}`);
+    //console.log(`Duration ${totalDuration}`);
     let i = 0;
     let previousIncidentType = await getPreviousDayLastIncident(
       mostActiveUser[0].consumer_id,
       mostActiveUser[0].reported_on
     );
-    console.log(`Previous type ${previousIncidentType}`);
+    //console.log(`Previous type ${previousIncidentType}`);
     for (let incident of mostActiveUser) {
       let reportedOn = new Date(incident.reported_on);
       if (previousIncidentType === 1) {
@@ -112,7 +112,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       }
       previousIncidentType = incident.incident_type;
     }
-    console.log(`Uptime ${upTime}` );
+    //console.log(`Uptime ${upTime}` );
     upTime = (upTime * 100) / totalDuration;
     return { upTime_inPerc: upTime };
   } catch (err) {
@@ -132,7 +132,7 @@ async function getIncidentCount(villageName, start, end) {
         [villageName, start, end]
       )
     ).rows[0];
-    console.log(result);
+    //console.log(result);
     return result;
   } catch (err) {
     console.log(err);
@@ -199,9 +199,9 @@ async function getResolutionTime(villageName, start, end = new Date()) {
         consumerIncidents[0].consumer_id,
         consumerIncidents[0].reported_on
       );
-      console.log(`Previous day last incident type ${previousIncidentType}`);
+      //console.log(`Previous day last incident type ${previousIncidentType}`);
       for (let consumerIncident of consumerIncidents) {
-        console.log(consumerIncident);
+        //console.log(consumerIncident);
         // if lit = 1 and currenttype != 1; set starttime = current reported time (new issue reported)
         if (
           previousIncidentType === 1 &&
@@ -216,9 +216,9 @@ async function getResolutionTime(villageName, start, end = new Date()) {
         ) {
           incidentResolutionTime =
             (new Date(consumerIncident.reported_on) - startTime) / 1000 / 60;
-          console.log(
-            `Incident resolution time ${incidentResolutionTime} mins.`
-          );
+          // console.log(
+          //   `Incident resolution time ${incidentResolutionTime} mins.`
+          // );
           totalResolutionTime += incidentResolutionTime;
           numberOfIncidentsResolved++;
           startTime = new Date();
@@ -238,7 +238,7 @@ async function getResolutionTime(villageName, start, end = new Date()) {
         }
         // in all cases, set lit = currenttype
         previousIncidentType = consumerIncident.incident_type;
-        console.log(`Start time ${startTime}`);
+        //console.log(`Start time ${startTime}`);
       }
     }
 
