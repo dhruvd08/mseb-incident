@@ -165,16 +165,16 @@ app.get("/notify-webhook", (req, res) => {
   }
 });
 
-// app.get("/newincident", async (req, res) => {
-//   newIncident = await incident.addIncident(
-//     1,
-//     await consumer.getConsumer("8010809158")
-//   );
-//   console.log(newIncident);
-//   //newIncident = {};
-//   //sseNewFeed(res);
-//   res.sendStatus(200);
-// });
+app.get("/newincident", async (req, res) => {
+  newIncident = await incident.addIncident(
+    1,
+    await consumer.getConsumer("918010865317")
+  );
+  console.log(newIncident);
+  //newIncident = {};
+  //sseNewFeed(res);
+  res.sendStatus(200);
+});
 
 app.post("/notify-webhook", async (req, res) => {
   if (req.body.entry[0].changes[0].value.messages) {
