@@ -126,13 +126,8 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
 }
 
 async function getIncidentCount(villageName, start, end) {
-  console.log(`Start ${start}`);
-  console.log(`End ${end}`);
-
   // start = new Date(`${start.getFullYear()}-${start.getMonth()+1}-${start.getDate()}`);
   // end = new Date(`${end.getFullYear()}-${end.getMonth()}-${end.getDate()}`);
-  console.log(`After Start ${start}`);
-  console.log(`After End ${end}`);
   try {
     const result = (
       await db.query(

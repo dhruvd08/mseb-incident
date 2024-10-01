@@ -1,4 +1,5 @@
 import pg from "pg";
+import * as waba from "./waba.js";
 
 pg.types.setTypeParser(pg.types.builtins.DATE, value => value)
 
@@ -62,6 +63,8 @@ async function getFeed() {
   }
 }
 
+const serviceProviders = [919825445389, 919925145389];
+
 async function addIncident(incident_type, consumer) {
   console.log(`${incident_type} for ${JSON.stringify(consumer)}`);
 
@@ -76,6 +79,9 @@ async function addIncident(incident_type, consumer) {
     newIncident.desc= getIncidentName(newIncident.incident_type);
     newIncident.name=consumer.name;
     console.log(`In addIncident function ${JSON.stringify(newIncident)}`);
+    for (const sp of serviceProviders){
+      await waba.notifyServiceProvider(sp, getIncidentName(incident_type),consumer.namedloc, new Date().toLocaleDateString());
+    }
     return newIncident;
   } catch (err) {
     console.log(err);

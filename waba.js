@@ -43,6 +43,21 @@ async function sendAck(phone) {
   await notifyConsumer(msg);
 }
 
+async function notifyServiceProvider(phone, incidentName, village, consumerName, reportedOn) {
+  let msg = msgTemplate.newIncidentServiceProviderNotification;
+  msg.to = phone;
+
+  msg.template.components[0].parameters[0].text = incidentName;
+
+  msg.template.components[1].parameters[0].text = village;
+  msg.template.components[1].parameters[1].text = consumerName;
+  msg.template.components[1].parameters[2].text = reportedOn;
+  
+  console.log(msg);
+
+  await notifyConsumer(msg);
+}
+
 async function notifyConsumer(msg) {
   const endpoint = `https://graph.facebook.com/v17.0/${FROM_PHONE_NUMBER_ID}/messages`;
   const header = {
@@ -64,6 +79,7 @@ export {
   sendNoLinkedPhoneFoundMsg,
   sendIncidentTypeSelection,
   sendLocationReq,
+  notifyServiceProvider,
   sendAck,
 };
 

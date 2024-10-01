@@ -72,7 +72,47 @@ const readReceipt = {
   message_id: "",
 };
 
-
+const newIncidentServiceProviderNotification = {
+  messaging_product: "whatsapp",
+  recipient_type: "individual",
+  to: "",
+  type: "template",
+  template: {
+    name: "incident_report",
+    language: {
+      code: "English"
+    },
+    components: [
+      {
+        type: "header",
+        parameters: [
+          {
+            type: "text",
+            text: ""
+          }
+        ]
+      },
+      {
+        type: "body",
+        parameters: [
+          {
+            type: "text",
+            text: "TEXT_STRING"
+          },
+          {
+            type: "text",
+            text: "TEXT_STRING"
+          },
+          {
+            type: "text",
+            text: "TEXT_STRING"
+          }
+        ]
+      },
+     
+    ]
+  }
+}
 
 const incidentSelection = {
     "messaging_product": "whatsapp",
@@ -121,4 +161,6 @@ const incidentSelection = {
     }
 }
 
-export { textMsg, readReceipt, incidentSelection, locationReq, ackMsg, getImg };
+
+
+export { textMsg, readReceipt, incidentSelection, locationReq, ackMsg, newIncidentServiceProviderNotification, getImg };
