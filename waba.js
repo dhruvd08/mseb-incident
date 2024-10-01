@@ -71,6 +71,7 @@ async function notifyConsumer(msg) {
   });
 
   const response = await result.json();
+  console.log(response);
 }
 
 export {

@@ -81,7 +81,7 @@ async function addIncident(incident_type, consumer) {
     console.log(`In addIncident function ${JSON.stringify(newIncident)}`);
     for (const sp of serviceProviders){
       await waba.notifyServiceProvider(sp, 
-        getIncidentName(incident_type),
+        newIncident.desc,
         consumer.namedloc,
         consumer.name, 
         new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString());
