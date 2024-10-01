@@ -53,8 +53,6 @@ async function notifyServiceProvider(phone, incidentName, village, consumerName,
   msg.template.components[1].parameters[1].text = consumerName;
   msg.template.components[1].parameters[2].text = reportedOn;
   
-  console.log(msg);
-
   await notifyConsumer(msg);
 }
 
@@ -65,6 +63,7 @@ async function notifyConsumer(msg) {
     "Content-Type": "application/json",
   };
 
+  console.log(JSON.stringify(msg));
   const result = await fetch(endpoint, {
     method: "POST",
     headers: header,
