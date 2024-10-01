@@ -80,7 +80,7 @@ const newIncidentServiceProviderNotification = {
   template: {
     name: "incident_report",
     language: {
-      code: "English"
+      code: "en"
     },
     components: [
       {
