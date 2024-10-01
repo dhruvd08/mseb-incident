@@ -1,4 +1,5 @@
 import express from "express";
+import 'dotenv/config';
 import * as incident from "./incident.js";
 import * as consumer from "./consumer.js";
 import * as insights from "./insights.js";

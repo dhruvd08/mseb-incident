@@ -74,7 +74,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
         })
       );
     }
- 
+
     let mostActiveUser = [];
     let mostActiveUserCount = 0;
 
@@ -85,7 +85,7 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       }
     }
 
- 
+
 
     let upTime = 0;
     let startTime = new Date(start);
@@ -93,38 +93,46 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
     const totalDuration = (endTime - startTime) / 1000 / 60;
     //console.log(`Duration ${totalDuration}`);
     let i = 0;
-    let previousIncidentType = await getPreviousDayLastIncident(
-      mostActiveUser[0].consumer_id,
-      mostActiveUser[0].reported_on
-    );
-    //console.log(`Previous type ${previousIncidentType}`);
-    for (let incident of mostActiveUser) {
-      let reportedOn = new Date(incident.reported_on);
-      if (previousIncidentType === 1) {
-        upTime += (reportedOn - startTime) / 1000 / 60;
-        startTime = reportedOn;
-      }
+    if (mostActiveUser.length > 0) {
+      let previousIncidentType = await getPreviousDayLastIncident(
+        mostActiveUser[0].consumer_id,
+        mostActiveUser[0].reported_on
+      );
+      //console.log(`Previous type ${previousIncidentType}`);
+      for (let incident of mostActiveUser) {
+        let reportedOn = new Date(incident.reported_on);
+        if (previousIncidentType === 1) {
+          upTime += (reportedOn - startTime) / 1000 / 60;
+          startTime = reportedOn;
+        }
 
-      i++;
-      if (i === mostActiveUser.length && incident.incident_type === 1) {
-        upTime += (endTime - reportedOn) / 1000 / 60;
-        console.log("went into second if statement");
+        i++;
+        if (i === mostActiveUser.length && incident.incident_type === 1) {
+          upTime += (endTime - reportedOn) / 1000 / 60;
+          console.log("went into second if statement");
+        }
+        previousIncidentType = incident.incident_type;
       }
-      previousIncidentType = incident.incident_type;
-    }
-    //console.log(`Uptime ${upTime}` );
-    upTime = (upTime * 100) / totalDuration;
-    return { upTime_inPerc: upTime };
-  } catch (err) {
-    console.log(err);
-    throw err;
+      //console.log(`Uptime ${upTime}` );
+      upTime = (upTime * 100) / totalDuration;
+      return { upTime_inPerc: upTime };
+    } else {
+      return { upTime_inPerc: 100};
   }
+  } catch (err) {
+  console.log(err);
+  throw err;
+}
 }
 
 async function getIncidentCount(villageName, start, end) {
-  start = new Date(`${start.getFullYear()}-${start.getMonth()+1}-${start.getDate()}`);
-  end = new Date(`${end.getFullYear()}-${end.getMonth()+1}-${end.getDate()+1}`);
+  console.log(`Start ${start}`);
+  console.log(`End ${end}`);
 
+  // start = new Date(`${start.getFullYear()}-${start.getMonth()+1}-${start.getDate()}`);
+  // end = new Date(`${end.getFullYear()}-${end.getMonth()}-${end.getDate()}`);
+  console.log(`After Start ${start}`);
+  console.log(`After End ${end}`);
   try {
     const result = (
       await db.query(

@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@tmcw/togeojson": "^5.8.1",
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.0",
     "fs": "^0.0.1-security",
