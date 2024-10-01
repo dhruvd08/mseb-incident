@@ -84,7 +84,7 @@ async function addIncident(incident_type, consumer) {
         getIncidentName(incident_type),
         consumer.namedloc,
         consumer.name, 
-        new Date().toLocaleDateString(), new Date().toLocaleTimeString());
+        new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString());
     }
     return newIncident;
   } catch (err) {
