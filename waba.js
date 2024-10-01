@@ -46,7 +46,7 @@ async function sendAck(phone) {
 async function notifyServiceProvider(phone, incidentName, village, consumerName, reportedOn) {
   let msg = msgTemplate.newIncidentServiceProviderNotification;
   msg.to = phone;
-
+  
   msg.template.components[0].parameters[0].text = incidentName;
 
   msg.template.components[1].parameters[0].text = village;
