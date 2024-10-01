@@ -63,7 +63,7 @@ async function getFeed() {
   }
 }
 
-const serviceProviders = [919825445389, 919925145389];
+const serviceProviders = ["919825445389", "919925145389"];
 
 async function addIncident(incident_type, consumer) {
   console.log(`${incident_type} for ${JSON.stringify(consumer)}`);
