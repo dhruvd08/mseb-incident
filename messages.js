@@ -78,7 +78,7 @@ const newIncidentServiceProviderNotification = {
   to: "",
   type: "template",
   template: {
-    name: "hello_world",
+    name: "incident_report",
     language: {
       code: "en_US"
     },
