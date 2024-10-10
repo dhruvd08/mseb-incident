@@ -121,12 +121,10 @@ const incidentSelection = {
     "type": "interactive",
     "interactive": {
         "type": "button",
-        // "header": {
-        //     "type": "image",
-        //     "image": {
-        //         "id": ""
-        //     }
-        // },
+        "header": {
+          "type":"text",
+          "text": "घटना नोंदवा"
+        },
         "body": {
             "text": "नमस्कार! सध्या वीज पुरवठ्याची स्थिती काय आहे? उत्तर देण्यासाठी बटणे वापरा. धन्यवाद!"
         },
