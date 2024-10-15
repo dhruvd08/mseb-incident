@@ -171,13 +171,10 @@ async function getUptimeByVillage2(villageName, start, end = new Date()) {
       end
     );
     const count = incidentCount.count;
-    console.log(count);
     const averageResolutionTime_inMins = await getResolutionTime(villageName, start, end);
     const avgResolutionTime = averageResolutionTime_inMins.averageResolutionTime_inMins;
     const totalDuration_inMins = (new Date() - start) / 1000 / 60;
-    console.log(totalDuration_inMins);
     const totalDowntime = avgResolutionTime * count;
-    console.log(totalDowntime);
     const upTime = 100 - (100 * totalDowntime) / totalDuration_inMins;
     return { upTime_inPerc: upTime};
   } catch (err) {
