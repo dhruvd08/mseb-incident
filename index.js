@@ -47,7 +47,7 @@ app.get("/uptime", async (req, res) => {
   //console.log(req.query.village);
   if (req.query.village) {
     try {
-      const uptime = await insights.getUptimeByVillage(
+      const uptime = await insights.getUptimeByVillage2(
         req.query.village,
         getFirstDateOfCurrentMonth(),
         getLastDateOfCurrentMonth()
@@ -166,16 +166,16 @@ app.get("/notify-webhook", (req, res) => {
   }
 });
 
-app.get("/newincident", async (req, res) => {
-  newIncident = await incident.addIncident(
-    1,
-    await consumer.getConsumer("918010865317")
-  );
-  console.log(newIncident);
-  //newIncident = {};
-  //sseNewFeed(res);
-  res.sendStatus(200);
-});
+// app.get("/newincident", async (req, res) => {
+//   newIncident = await incident.addIncident(
+//     1,
+//     await consumer.getConsumer("918010865317")
+//   );
+//   console.log(newIncident);
+//   //newIncident = {};
+//   //sseNewFeed(res);
+//   res.sendStatus(200);
+// });
 
 app.post("/notify-webhook", async (req, res) => {
   if (req.body.entry[0].changes[0].value.messages) {

@@ -117,12 +117,12 @@ async function getUptimeByVillage(villageName, start, end = new Date()) {
       upTime = (upTime * 100) / totalDuration;
       return { upTime_inPerc: upTime };
     } else {
-      return { upTime_inPerc: 100};
-  }
+      return { upTime_inPerc: 100 };
+    }
   } catch (err) {
-  console.log(err);
-  throw err;
-}
+    console.log(err);
+    throw err;
+  }
 }
 
 async function getIncidentCount(villageName, start, end) {
@@ -157,6 +157,29 @@ async function getPreviousDayLastIncident(consumer_id, currentDate) {
     ).rows[0];
 
     return result === undefined ? 1 : result.incident_type;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+async function getUptimeByVillage2(villageName, start, end = new Date()) {
+  try {
+    const incidentCount = await getIncidentCount(
+      villageName,
+      start,
+      end
+    );
+    const count = incidentCount.count;
+    console.log(count);
+    const averageResolutionTime_inMins = await getResolutionTime(villageName, start, end);
+    const avgResolutionTime = averageResolutionTime_inMins.averageResolutionTime_inMins;
+    const totalDuration_inMins = (new Date() - start) / 1000 / 60;
+    console.log(totalDuration_inMins);
+    const totalDowntime = avgResolutionTime * count;
+    console.log(totalDowntime);
+    const upTime = 100 - (100 * totalDowntime) / totalDuration_inMins;
+    return { upTime_inPerc: upTime};
   } catch (err) {
     console.log(err);
     throw err;
@@ -258,6 +281,7 @@ async function getResolutionTime(villageName, start, end = new Date()) {
 
 export {
   getUptimeByVillage,
+  getUptimeByVillage2,
   getUniqueVillages,
   getIncidentCount,
   getResolutionTime,
